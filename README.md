@@ -1,5 +1,5 @@
 # UniCollab
-**UniCollab** is a web application, created by Seng2021 students, that allows university students to collaborate and intuitively form groups for academic and extracurricular events and activities.
+**UniCollab** is a web application, created by Seng2021 members, that allows university students to form groups for academic, extracurricular, and casual events and activities. With a mission to connect students and create opportunities, our app allows for intuitive collaboration.
 ## Hosted On:
 {Website}
 ## Instructions:
