@@ -21,7 +21,7 @@
     </v-row>
     <v-row>
        <div style="height: 50px; width: 100%">
-        <v-btn color="#55CBD3" dark elevation="0" style="width: 150px;margin-left: -75px;left: 50%">
+        <v-btn color="#55CBD3" dark elevation="0" @click="$router.push(`/signup`)" style="width: 150px;margin-left: -75px;left: 50%">
           GET STARTED
         </v-btn>
       </div>
