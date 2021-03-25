@@ -25,7 +25,7 @@
         <v-btn color="#55CBD3" dark elevation="0">
           Sign Up
         </v-btn>
-        <v-btn color="#55CBD3" dark elevation="0" class="ml-10">
+        <v-btn @click="$router.push(`/`)" color="#55CBD3" dark elevation="0" class="ml-10">
           Cancle
         </v-btn>
       </v-row>

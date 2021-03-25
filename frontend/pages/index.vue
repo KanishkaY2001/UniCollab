@@ -1,10 +1,10 @@
 <template>
   <div>
-    <v-row cols="12">
-      <v-col cols="10" style="margin-left: 10px">
-        <img class="logo1 ml-5" src="/img/logo.svg"/>
+    <v-row cols="12" class="mt-3">
+      <v-col cols="11">
+        <img class="logo1" style="margin-left: 40px" src="/img/logo.svg"/>
       </v-col>
-      <v-btn style="margin-top: 20px; margin-right: 20px" color="#55CBD3" dark elevation="0">
+      <v-btn large style="margin-top: 40px" color="#55CBD3" dark elevation="0">
         LOGIN
       </v-btn>
     </v-row>
@@ -21,7 +21,7 @@
     </v-row>
     <v-row>
        <div style="height: 50px; width: 100%">
-        <v-btn color="#55CBD3" dark elevation="0" @click="$router.push(`/signup`)" style="width: 150px;margin-left: -75px;left: 50%">
+        <v-btn large color="#55CBD3" dark elevation="0" @click="$router.push(`/signup`)" style="width: 150px;margin-left: -75px;left: 50%">
           GET STARTED
         </v-btn>
       </div>
@@ -32,6 +32,7 @@
 
 <script>
 export default {
+  layout: 'welcome',
   head() {
     return {
       title: "Home page"
@@ -42,16 +43,17 @@ export default {
 
 <style scoped lang="scss">
 .logo1 {
-  left: 5%;
   width: 80px;
   height: 80px;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 .welcome {
   height: 150px;
   width: 100%;
   background-color: #A1EEF4;
   .welcome-text {
-    font-size: 25px;
+    font-size: 40px;
     color: white;
     font-weight: bold;
     text-align: center;
@@ -62,6 +64,7 @@ export default {
 .sign-up {
   color: grey;
   text-align: center;
+  font-size: 20px;
 }
 .text-box p {
   color: grey;
