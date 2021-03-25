@@ -1,18 +1,10 @@
 <template>
-  <v-app id="cApp">
-    <v-main>
-      <v-row no-gutters justify="center">
-        <v-col cols="12" sm="10" lg="8" class="max">
-          <nuxt />
-        </v-col>
-      </v-row>
-    </v-main>
-  </v-app>
+  <nuxt />
 </template>
+
 
 <style>
 #cApp {
-  font-family: "apercu", "Microsoft JhengHei", "微軟正黑體", Arial;
   background-color:white !important;
 }
 
