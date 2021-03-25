@@ -17,16 +17,32 @@
         <v-text-field placeholder="University" label="University" outlined></v-text-field>
       </v-row>
       <v-row class="ml-6 mr-6 mt-5">
-        <v-text-field placeholder="Password" label="Password" outlined></v-text-field>
+        <v-text-field
+            :value="userPassword"
+            label="Password"
+            placeholder="Password"
+            :append-icon="value ? 'mdi-eye-off' : 'mdi-eye'"
+            @click:append="() => (value = !value)"
+            :type="value ? 'password' : 'text'"
+            outlined
+        ></v-text-field>
         <v-spacer></v-spacer>
-        <v-text-field placeholder="Confirm password" label="Confirm password" outlined></v-text-field>
+        <v-text-field
+            :value1="userPassword"
+            label="Confirm Password"
+            placeholder="Confirm Password"
+            :append-icon="value1 ? 'mdi-eye-off' : 'mdi-eye'"
+            @click:append="() => (value1 = !value1)"
+            :type="value1 ? 'password' : 'text'"
+            outlined
+        ></v-text-field>
       </v-row>
       <v-row justify="center" class="mt-10">
         <v-btn color="#55CBD3" dark elevation="0">
           Sign Up
         </v-btn>
         <v-btn @click="$router.push(`/`)" color="#55CBD3" dark elevation="0" class="ml-10">
-          Cancle
+          Cancel
         </v-btn>
       </v-row>
     </v-col>
@@ -38,6 +54,12 @@
 
 <script>
 export default {
+  data: () => ({
+    userPassword: "",
+    valid: true,
+    value: true,
+    value1: true,
+  })
   // data: () => ({
   //   windowSize: {
   //     x: 0,

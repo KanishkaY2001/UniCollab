@@ -4,7 +4,7 @@
       <v-col cols="11">
         <img class="logo1" style="margin-left: 40px" src="/img/logo.svg"/>
       </v-col>
-      <v-btn large style="margin-top: 40px" color="#55CBD3" dark elevation="0">
+      <v-btn large style="margin-top: 40px" color="#55CBD3" dark elevation="0" @click="$router.push(`/signin`)">
         LOGIN
       </v-btn>
     </v-row>
