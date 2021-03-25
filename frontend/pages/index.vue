@@ -1,12 +1,14 @@
 <template>
   <div>
     <v-row cols="12" class="mt-3">
-      <v-col cols="11">
-        <img class="logo1" style="margin-left: 40px" src="/img/logo.svg"/>
+      <v-col cols="6">
+        <img class="logo1" style="margin-left: 10px; margin-top: 10px" src="/img/logo.svg"/>
       </v-col>
-      <v-btn large style="margin-top: 40px" color="#55CBD3" dark elevation="0" @click="$router.push(`/signin`)">
-        LOGIN
-      </v-btn>
+      <v-col cols="6">
+        <v-btn :right="true" :absolute="true" large style="margin-top: 45px" color="#55CBD3" dark elevation="0" @click="$router.push(`/signin`)" x-large>
+          LOGIN
+        </v-btn>
+      </v-col>
     </v-row>
     <v-row>
       <div class="welcome"> 
@@ -14,14 +16,14 @@
       </div>
       <div style="height: 300px"></div>
     </v-row>
-    <v-row align="center" justify="space-around">
+    <v-row align="bottom" justify="space-around">
       <div style="height: 50px; width: 100%">
         <div class="sign-up">Sign-up to start collaborating</div>
       </div>
     </v-row>
     <v-row>
        <div style="height: 50px; width: 100%">
-        <v-btn large color="#55CBD3" dark elevation="0" @click="$router.push(`/signup`)" style="width: 150px;margin-left: -75px;left: 50%">
+        <v-btn class="get-started" style="margin-top: 2%" height="75" width="200" color="#55CBD3" dark elevation="0" @click="$router.push(`/signup`)" :style="{left: '50%', transform:'translateX(-50%)'}">
           GET STARTED
         </v-btn>
       </div>
@@ -42,11 +44,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.logo1 {
-  width: 80px;
-  height: 80px;
-  margin-top: 10px;
-  margin-left: 10px;
+.get-started {
+  font-size: 20px;
 }
 .welcome {
   height: 150px;
@@ -64,7 +63,7 @@ export default {
 .sign-up {
   color: grey;
   text-align: center;
-  font-size: 20px;
+  font-size: 40px;
 }
 .text-box p {
   color: grey;
