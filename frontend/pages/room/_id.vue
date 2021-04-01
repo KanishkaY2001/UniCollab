@@ -2,8 +2,8 @@
 <div class="mt-10">
   <dashboard></dashboard>
   <div class="intro">
-    <v-row>
-      <img class="back-icon" src="/img/back.svg"></img>
+    <v-row cols="12">
+      <img class="back-icon" src="/img/back.svg">
       <v-col cols="8">
         <div class="intro-text ml-5">{{findGroupText}}</div>
       </v-col>
@@ -27,7 +27,6 @@
         class="mt-10 mb-10"
         v-for="g in groups"
         v-bind:key="g.id"
-      
       ></groupitem>
   </div>
   <div class="footer mt-10">

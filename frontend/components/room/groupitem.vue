@@ -1,5 +1,5 @@
 <template>
-  <v-row cols="12" class="frame ml-4 mt-3">
+  <v-row cols="12" class="frame mt-3">
     <v-col cols="2" align-self="center">
       <v-img contain src="/img/spaceman.png"/>
     </v-col>
@@ -62,6 +62,7 @@ export default {
 
 <style scoped lang="scss">
 .frame{
+  margin: 0px;
   background-color: #C7DAC7;
 }
 .group-title{
