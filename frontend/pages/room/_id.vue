@@ -1,6 +1,6 @@
 <template>
 <div class="mt-10">
-  <dashboard></dashboard>
+  <dashboard :title="roomName"></dashboard>
   <div class="intro">
     <v-row cols="12">
       <img class="back-icon" src="/img/back.svg">
@@ -49,6 +49,7 @@ export default {
       roomId: this.$route.params.id,
       groupIntro: "Groups with proposed meeting times that match your calendar commitments will be displayed green, if you are are partially available for a groups proposed meeting times, the group will be displayed yellow. Incompatible groups will be listed as red. You may click a box to see more information about the group.",
       groups:[{'id': 1}, {'id': 2}],
+      roomName: "Room: SENG2021 PROJECTS"
     }
   }
 }

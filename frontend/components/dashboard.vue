@@ -5,7 +5,7 @@
       <v-img contain class="logo1" src="/img/logo.svg"/>
     </v-col>
     <v-col cols="8" justify="center" class="pr-6 mt-3">
-      <div class="room-name">Room:{{roomName}}</div>
+      <div class="room-name">{{this.title}}</div>
     </v-col>
     <v-col cols="2">
       <v-avatar
@@ -20,6 +20,7 @@
 
 <script>
 export default {
+  props: ["title"],
   data() {
     return {
       roomName: "SENG2021 PROJECTS"
