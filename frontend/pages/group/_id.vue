@@ -3,7 +3,7 @@
   <dashboard :title="roomName"></dashboard>
   <div class="frame pb-10">
     <v-row class="mt-10" cols="12" justify="space-between">
-      <img class="back-icon" src="/img/back.svg">
+      <img class="back-icon ml-3" src="/img/back.svg" @click="$router.back()">
       <v-col cols="8">
         <div class="group-name ml-5">{{groupName}}</div>
       </v-col>

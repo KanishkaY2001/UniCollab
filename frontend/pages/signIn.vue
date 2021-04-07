@@ -21,7 +21,7 @@
         ></v-text-field>
       </v-row>
       <v-row justify="center" class="mt-10">
-        <v-btn color="#55CBD3" dark elevation="0">
+        <v-btn color="#55CBD3" dark elevation="0" @click="login">
           Login
         </v-btn>
         <v-btn @click="$router.push(`/signup`)" color="#55CBD3" dark elevation="0" class="ml-10">
@@ -44,11 +44,16 @@
 
 <script>
 export default {
-    data: () => ({
-        userPassword: "",
-        valid: true,
-        value: true,
-    })
+  data: () => ({
+      userPassword: "",
+      valid: true,
+      value: true,
+  }),
+  methods: {
+    login() {
+      this.$router.push(`/user/1`)
+    }
+  },
 }
 </script>
 

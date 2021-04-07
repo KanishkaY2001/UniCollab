@@ -3,7 +3,7 @@
   <dashboard :title="roomName"></dashboard>
   <div class="intro">
     <v-row cols="12">
-      <img class="back-icon" src="/img/back.svg">
+      <img class="back-icon" src="/img/back.svg" @click="$router.back()">
       <v-col cols="8">
         <div class="intro-text ml-5">{{findGroupText}}</div>
       </v-col>
