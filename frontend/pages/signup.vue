@@ -38,7 +38,7 @@
         ></v-text-field>
       </v-row>
       <v-row justify="center" class="mt-10">
-        <v-btn color="#55CBD3" dark elevation="0">
+        <v-btn color="#55CBD3" dark elevation="0" @click="signup">
           Sign Up
         </v-btn>
         <v-btn @click="$router.push(`/`)" color="#55CBD3" dark elevation="0" class="ml-10">
@@ -59,7 +59,12 @@ export default {
     valid: true,
     value: true,
     value1: true,
-  })
+  }),
+  methods: {
+    signup(){
+      this.$router.push(`/user/1`)
+    }
+  },
   // data: () => ({
   //   windowSize: {
   //     x: 0,
