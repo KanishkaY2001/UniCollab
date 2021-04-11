@@ -19,16 +19,16 @@ def upload_file_view(request):
         if i ==0:
           pass
         else:
-          row = ''.join(row)
-          # row = row.replace(".", ' ')
-          row = row.split()
+          row = ','.join(row)
+          print(row)
+          # # row = row.replace(".", ' ')
+          row = row.split(',')
           course = row[0]
-          skills = row[1]
-          Course.objects.create(
+          skill = row[1]
+          obj = Course.objects.create(
             name = course,
-            skill = skills
+            skill = skill
           )
-          
-      obj.activated = True
-      obj.save()
+    obj.activated = True
+    obj.save()
   return render(request, 'csvs/upload.html', {'form': form})
