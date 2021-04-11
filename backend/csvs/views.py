@@ -23,15 +23,7 @@ def upload_file_view(request):
           # row = row.replace(".", ' ')
           row = row.split()
           course = row[0]
-          skills = row[1]
-          for skill in row[2:]:
-            skills += f" {skill}"
-          
-          Course.objects.create(
-            name = course,
-            skill = skills
-          )
-          
+          outline = row[1]
       obj.activated = True
       obj.save()
   return render(request, 'csvs/upload.html', {'form': form})
