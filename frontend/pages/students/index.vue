@@ -4,12 +4,11 @@
       <div class="col-12 text-right mb-4">
         <div class="d-flex justify-content-between">
           <h3>Student List</h3>
-          <v-btn to="/students/add" >Add student</v-btn>
         </div>
       </div>
       <template v-for="student in students">
         <div :key="student.id" class="col-lg-3 col-md-4 col-sm-6 mb-4">
-          <student-card :onDelete="deletestudent" :student="student"></student-card>
+          <student-card :student="student" :onDelete="deleteStudent"></student-card>
         </div>
       </template>
     </div>
@@ -34,6 +33,9 @@ const sampleData = [
 ];
 
 export default {
+  created() {
+
+  },
   head() {
     return {
       title: "Student list"

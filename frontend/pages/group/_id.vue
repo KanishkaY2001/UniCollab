@@ -1,7 +1,7 @@
 <template>
 <div>
   <dashboard :title="roomName"></dashboard>
-  <div class="frame pb-10">
+  <div class="frame pb-10 mb-10">
     <v-row class="mt-10" cols="12" justify="space-between">
       <img class="back-icon ml-3" src="/img/back.svg" @click="$router.back()">
       <v-col cols="8">

@@ -1,13 +1,10 @@
 from django.db import models
 
 # Create your models here.
-
-class Student(models.Model):
+class Course(models.Model):
     name = models.CharField(max_length=140)
-    course = models.CharField(max_length=140)
-    rating = models.IntegerField()
+    skill = models.CharField(max_length=300)
 
     class Meta:
         ordering = ['name']
-    
     
