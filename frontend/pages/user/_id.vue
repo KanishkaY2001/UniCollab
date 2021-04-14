@@ -2,7 +2,7 @@
   <div class="mt-10">
     <dashboard :title="userName"></dashboard>
     <v-row cols="12" class="pb-10">
-      <v-col cols="7" style="background-color: #8AE8EF">
+      <v-col cols="4" style="background-color: #8AE8EF">
         <img class="back-icon" src="/img/back.svg" @click="$router.back()">
         <div class="subtitle">Find a Room...</div>
         <v-text-field
@@ -49,7 +49,7 @@
           </v-virtual-scroll>
         </v-card>
       </v-col>
-      <v-col cols="5">
+      <v-col cols="7">
         <v-row justify="end" style="background-color:#D2F3F5">
           <v-btn 
             dark

@@ -15,8 +15,8 @@
   </main>
 </template>
 <script>
-import studentCard from "~/components/studentCard.vue";
 
+import studentCard from "~/components/studentCard.vue";
 const sampleData = [
   {
     id: 1,

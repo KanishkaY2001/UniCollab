@@ -137,7 +137,7 @@ export default {
           {id: 10, name: 'COMP1533'},
 
         ],
-        hobbies: ["play", "sleep", "being lazy", "play", "sleep", "being lazy"]
+        hobbies: ["play", "sleep", "being lazy", "play", "sleep"]
       }
     }
   },
