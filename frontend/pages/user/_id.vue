@@ -49,7 +49,7 @@
           </v-virtual-scroll>
         </v-card>
       </v-col>
-      <v-col cols="7">
+      <v-col cols="8">
         <v-row justify="end" style="background-color:#D2F3F5">
           <v-btn 
             dark

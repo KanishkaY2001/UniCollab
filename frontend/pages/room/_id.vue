@@ -16,6 +16,25 @@
         append-icon="mdi-magnify"
       ></v-text-field>
       </v-col>
+      <v-menu
+        top
+        :close-on-click="filter"
+      >
+        <template v-slot:activator="{ on }">
+          <v-icon class="material-icons mb-5" v-on="on">
+            mdi-filter
+          </v-icon>
+        </template>
+        <v-list>
+          <v-list-item
+            v-for="(item, index) in filter_type"
+            :key="index"
+            link
+          >
+            <v-list-item-title>{{ item }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
       <v-btn class="mt-6 ml-4" color="#55CBD3" dark>
         create Group
       </v-btn>
@@ -46,6 +65,8 @@ export default {
   components: { dashboard, groupitem },
   data() {
     return {
+      filter: false,
+      filter_type: ['Overall Match', 'Timetable', 'Location', 'Skillset'],
       findGroupText: "Find a group by scrolling through the list below, or filtering your search using the search bar filter tool",
       roomId: this.$route.params.id,
       groupIntro: "Groups with proposed meeting times that match your calendar commitments will be displayed green, if you are are partially available for a groups proposed meeting times, the group will be displayed yellow. Incompatible groups will be listed as red. You may click a box to see more information about the group.",
