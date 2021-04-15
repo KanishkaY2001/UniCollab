@@ -1,11 +1,11 @@
 <template>
-  <v-row cols="12" class="frame mt-3">
+  <v-row cols="12" class="mt-3" v-bind:class="{frame0: zero, frame1: one, frame2: two}">
     <v-col cols="2" align-self="center">
       <v-img contain src="/img/spaceman.png"/>
     </v-col>
     <v-col cols="3" align-self="center">
-        <div class="group-title mt-2">GroupName</div>
-        <div class="discript-text mt-1">{{discript}}</div>
+        <div class="group-title mt-2">{{group.name}}</div>
+        <div class="discript-text mt-1">{{group.discript}}</div>
     </v-col>
     <v-col cols="3">
       <div class="list-title">Looking For...</div>
@@ -15,7 +15,7 @@
         max-height="100">
         <div> 
           <div
-            v-for="(item, i) in skills"
+            v-for="(item, i) in group.skills"
             v-bind:key="i"
             class="list-text ml-1">- {{item}}
           </div>
@@ -25,18 +25,24 @@
     <v-col cols="2">
       <div class="list-title">Members</div>
         <div style="background-color: white;overflow-y: auto;">
-          <div
-            v-for="(item, i) in members"
-            v-bind:key="i"
-          > 
-          <div class="list-text ml-3">{{item}}</div>
-        </div>
+        <v-sheet
+          style="background-color: white;overflow-y: auto;"
+          scrollable
+          max-height="100">
+          <div> 
+            <div
+              v-for="(item, i) in group.members"
+              v-bind:key="i"
+              class="list-text ml-1">- {{item}}
+            </div>
+          </div>
+        </v-sheet>
       </div>
     </v-col>
     <v-col cols="2">
       <div class="list-title">Vacancy</div>
       <div class="vacancy-frame">
-        <div class="text pt-3">3/5</div>
+        <div class="text pt-3">{{group.members.length}}/5</div>
       </div>
     </v-col>
   </v-row>
@@ -44,6 +50,7 @@
 
 <script>
 export default {
+  props: ["group"],
   data() {
     return {
       scrollInvoked: 0,
@@ -56,12 +63,31 @@ export default {
     onScroll () {
       this.scrollInvoked++
     },
+  },
+  computed: {
+    zero: function(){
+      return this.group.match == 0
+    },
+    one: function(){
+      return this.group.match == 1
+    },
+    two: function(){
+      return this.group.match == 2
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.frame{
+.frame0{
+  margin: 0px;
+  background-color: #F0AFAF;
+}
+.frame1{
+  margin: 0px;
+  background-color: #ECE7C0;
+}
+.frame2{
   margin: 0px;
   background-color: #C7DAC7;
 }
@@ -83,6 +109,7 @@ export default {
   font-size: 22px;
   color:#646868;
   font-weight: 10px;
+  height: 35px;
 }
 .list-text{
   color: #646868;
