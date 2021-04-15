@@ -16,6 +16,20 @@ def index(request):
     return JsonResponse(students, safe=False)
 
 
+def user(request, id=id):
+    user = {}
+    for student in Student.objects.all():
+        if (student.id == id):
+            user = {
+                'name': student.name,
+                'course': student.course,
+                'rating': student.rating
+            }
+            break
+    return JsonResponse(user, safe=False)
+
+
+
 # from rest_framework.viewsets import ModelViewSet
 
 # from .models import Student
