@@ -26,8 +26,8 @@ def sortGroupBySkills(groups, user):
             if course in user['courses']:
                 # See if this user is what the group is looking for
                 for skill in group['lookingForSkills']:
+                    print(f"Seraching for {skill} in {course}")
                     match = re.search(r'[\s|\"]'+skill+r'[\s|,|:|\"|\;]', coursesInfo[course], re.IGNORECASE)
-                    print(match)
                     if match and not skill in lookingForMatchedSkills:
                         if not skill in lookingForMatched:
                             lookingForMatched[skill] = 1
@@ -52,11 +52,13 @@ def sortGroupBySkills(groups, user):
             synergyScore += count
 
         # User having skills that the group already has is worth 0.5
-        for skill, count in hasMatched:
+        for skill, count in hasMatched.items():
             synergyScore += count
-    
+
+        print("FINISHED")
+
     sortedGroups.append({
-        'groupId': group.groupId,
+        'groupId': group['id'],
         'score': synergyScore
     })
     return sortedGroups
@@ -72,38 +74,38 @@ groups = [
     {
         "id": 1,
         "name": "Group 1",
-        "lookingForSkills": "Python, SQLite",
-        "hasSkills": "Data Modelling, Programming, C"
+        "lookingForSkills": ["Python", "SQLite"],
+        "hasSkills": ["Data Modelling", "Programming", "C"]
     },
     {
         "id": 2,
         "name": "Group 2",
-        "lookingForSkills": "User Interfaces, Django, C++",
-        "hasSkills": "Python, Algorithms"
+        "lookingForSkills": ["User Interfaces", "Django", "C"],
+        "hasSkills": ["Python", "Algorithms"]
     },
     {
         "id": 3,
         "name": "Group 3",
-        "lookingForSkills": "Text Processing, Binary Search Trees, Graphs, Sorting",
-        "hasSkills": "Heaps, Balanced Search Trees"
+        "lookingForSkills": ["Text Processing", "Binary Search Trees", "Graphs", "Sorting"],
+        "hasSkills": ["Heaps", "Balanced Search Trees"]
     },
     {
         "id": 4,
         "name": "Group 4",
-        "lookingForSkills": "C",
-        "hasSkills": "Data Modelling, Programming, C"
+        "lookingForSkills": ["C"],
+        "hasSkills": ["Data Modelling", "Programming", "C"]
     },
     {
         "id": 5,
         "name": "Group 5",
-        "lookingForSkills": "Python, SQLite",
-        "hasSkills": "Data Modelling, Programming, C"
+        "lookingForSkills": ["Python", "SQLite"],
+        "hasSkills": ["Data Modelling", "Programming", "C"]
     },
     {
         "id": 6,
         "name": "Group 6",
-        "lookingForSkills": "Python, SQLite",
-        "hasSkills": "Data Modelling, Programming, C"
+        "lookingForSkills": ["Python", "SQLite"],
+        "hasSkills": ["Data Modelling", "Programming", "C"]
     }
 ]
 
