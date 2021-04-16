@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'students',
     'csvs',
     'courses',
+    'groups',
+    'rooms'
 ]
 
 MIDDLEWARE = [
