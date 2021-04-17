@@ -15,6 +15,7 @@ def sortGroupBySkills(groups, user):
     coursesInfo = json.load(file)
     sortedGroups = []
     for group in groups:
+        print(f"MATCHING FOR GROUP {group['name']}")
         lookingForMatched = {}
         hasMatched = {}
         for course in coursesInfo:
@@ -26,7 +27,7 @@ def sortGroupBySkills(groups, user):
             if course in user['courses']:
                 # See if this user is what the group is looking for
                 for skill in group['lookingForSkills']:
-                    print(f"Seraching for {skill} in {course}")
+                    print(f"LOOKING FOR {skill} in {course}")
                     match = re.search(r'[\s|\"]'+skill+r'[\s|,|:|\"|\;]', coursesInfo[course], re.IGNORECASE)
                     if match and not skill in lookingForMatchedSkills:
                         if not skill in lookingForMatched:
@@ -36,6 +37,7 @@ def sortGroupBySkills(groups, user):
                 
                 # See if this group has existing synergies with the user
                 for skill in group['hasSkills']:
+                    print(f"HAS {skill} in {course}")
                     match = re.search(r'[\s|\"]'+skill+r'[\s|,|:|\"|\;]', coursesInfo[course], re.IGNORECASE)
                     if match and not skill in hasMatchedSkills:
                         if not skill in hasMatched:
@@ -43,6 +45,7 @@ def sortGroupBySkills(groups, user):
                         else:
                             hasMatched[skill] += 1
         
+        print(lookingForMatched)
         print(hasMatched)
         # Determine the synergy the user has with this group
         synergyScore = 0
@@ -56,11 +59,11 @@ def sortGroupBySkills(groups, user):
             synergyScore += count
 
         print("FINISHED")
+        sortedGroups.append({
+            'groupId': group['id'],
+            'score': synergyScore
+        })
 
-    sortedGroups.append({
-        'groupId': group['id'],
-        'score': synergyScore
-    })
     return sortedGroups
 
 
@@ -95,18 +98,18 @@ groups = [
         "lookingForSkills": ["C"],
         "hasSkills": ["Data Modelling", "Programming", "C"]
     },
-    {
-        "id": 5,
-        "name": "Group 5",
-        "lookingForSkills": ["Python", "SQLite"],
-        "hasSkills": ["Data Modelling", "Programming", "C"]
-    },
-    {
-        "id": 6,
-        "name": "Group 6",
-        "lookingForSkills": ["Python", "SQLite"],
-        "hasSkills": ["Data Modelling", "Programming", "C"]
-    }
+    # {
+    #     "id": 5,
+    #     "name": "Group 5",
+    #     "lookingForSkills": ["Python", "SQLite"],
+    #     "hasSkills": ["Data Modelling", "Programming", "C"]
+    # },
+    # {
+    #     "id": 6,
+    #     "name": "Group 6",
+    #     "lookingForSkills": ["Python", "SQLite"],
+    #     "hasSkills": ["Data Modelling", "Programming", "C"]
+    # }
 ]
 
 print(sortGroupBySkills(groups, user))
