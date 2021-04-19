@@ -20,10 +20,12 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('student/', include('students.urls')),
     path('group/', include('groups.urls')),
     path('', include('csvs.urls', namespace='csvs')),
-    path('rooms/', include('rooms.urls'))
+    path('rooms/', include('rooms.urls')),
 ]
 
 

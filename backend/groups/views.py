@@ -42,9 +42,6 @@ def index(request, id=id):
       startTime = group.preferredmeetingStartTime.strftime("%Y-%m-%d %H:%M")
       endTime = group.preferredmeetingEndTime.strftime("%Y-%m-%d %H:%M")
       groups.append({
-<<<<<<< HEAD
-        'name': group.name
-=======
         'name': group.name, 
         'room': group.room.name,
         'owner': group.owner.name,
@@ -53,7 +50,6 @@ def index(request, id=id):
         'preferredmeetingStartTime': startTime,
         'preferredmeetingEndTime': endTime,
         'photo': photo
->>>>>>> 20d6a42f81dc4aa409782823c05d06a7fccfbe06
       })
   return JsonResponse(groups, safe=False)
 
