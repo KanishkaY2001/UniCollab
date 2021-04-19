@@ -5,24 +5,47 @@
     <v-row class="mt-10" cols="12" justify="space-between">
       <img class="back-icon ml-3" src="/img/back.svg" @click="$router.back()">
       <v-col cols="8">
-        <div class="group-name ml-5">{{groupName}}</div>
+        <div class="group-name ml-5">{{group.name}}</div>
       </v-col>
       <img class="back-icon mr-4" src="/img/bell.svg">
     </v-row>
     <v-divider class="mt-3"></v-divider>
     <v-row class="group-info" cols="12" justify="center">
-      <v-col cols="9">
+      <v-col cols="10">
         <v-row>
-          <v-img contain class="ml-4 mt-7" style="max-width: 120px" src="/img/spaceman.png"/>
+          <v-img contain class="ml-4 mt-7" style="max-width: 120px" :src="getImageURL"/>
           <v-col cols="7" style="background-color: white" class="mt-7 ml-7">
             <div style="color: #55CBD3">About us</div>
             <div style="font-size: 13px; color: #646868">
-              {{description}}
+              {{group.descript}}
             </div>
           </v-col>
+          <!-- <v-btn dark color="#55CBD3" class="mt-10 mr-8">JOIN</v-btn> -->
+          <join
+            v-if="permission.inGroup==false"
+          ></join>
+          <v-btn
+            small
+            v-else-if="permission.isMember==false"
+            dark
+            color="#55CBD3"
+            class="mt-10 ml-2"
+          >Request Sent</v-btn>
+          <v-btn
+            small
+            v-else-if="permission.isOwner==true"
+            dark
+            color="#55CBD3"
+            class="mt-10 ml-2"
+          >Setting</v-btn>
+          <v-btn
+            v-else-if="permission.isOwner==false"
+            dark
+            color="#55CBD3"
+            class="mt-10 ml-2"
+          >LEAVE</v-btn>        
         </v-row>
       </v-col>
-      <v-btn dark color="#55CBD3" class="mt-10 mr-8">JOIN</v-btn>
     </v-row>
     <v-row cols="12" justify="space-between">
     <v-col cols="3" class="mt-10 ml-10 skill-section">
@@ -76,9 +99,6 @@
       <v-sheet class="mt-10" height="300" width="400">
         <v-calendar
           ref="calendar"
-          :now="today"
-          :value="today"
-          :events="events"
           color="primary"
           type="week"
         ></v-calendar>
@@ -91,16 +111,49 @@
 
 <script>
 import dashboard from "@/components/dashboard"
+import join from "@/components/group/join"
 export default {
-  components: {dashboard},
+  async asyncData({ $axios, params }) {
+    try {
+      let group = await $axios.$get(`/group/` + params.id);
+      let permission = await $axios.$get(`/group/` + params.id + `/user/1/permission`);
+      // console.log(group.gasdg)
+      // console.log(permission)
+      permission=  {
+        'inGroup': true,
+        'isMember': true,
+        'isOwner': true,
+      }
+      return { group, permission};
+    } catch (e) {
+      return { group: {} };
+    }
+  },
+  components: {dashboard, join},
   data() {
     return {
+      userId: 1,
       members: [{'id': 1, 'image': "", 'name': "Sam"},{'id': 2, 'image': "", 'name': "Amy"}],
       haveSkill: ["python", "JavaScript", "python", "sususususususlong"],
       needSkill: ["React", "CSS", "FLASK"],
       roomName: "Room: SENG2021 PROJECTS",
       groupName: "Attack on HD",
       description: "We are passionate, enthusiastic, with highly capable coding abilties to ATTACK that HD with full force! Join us if u wanna work hard :)"
+    }
+  },
+  computed: {
+    getImageURL() {
+      console.log("http://127.0.0.1:8000/media/" + "groupAvatar/C6937000-0EC0-4603-B2D5-3834CB8ACEB5_LsI6YJ1.jpeg")
+      return "http://127.0.0.1:8000/media/" + "groupAvatar/C6937000-0EC0-4603-B2D5-3834CB8ACEB5_LsI6YJ1.jpeg"
+    }
+  },
+  async mounted() {
+    try {
+      let permission = await this.$axios.$get(`/group/${route.params.id}/user/${userId}/permission/`);
+      this.permission = permission;
+      console.log(permission)
+    } catch (e) {
+      console.log(e);
     }
   }
 }
