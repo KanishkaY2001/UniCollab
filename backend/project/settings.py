@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'csvs',
     'courses',
     'groups',
-    'rooms'
+    'rooms',
+    'groupMembers'
 ]
 
 MIDDLEWARE = [
