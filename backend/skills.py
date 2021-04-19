@@ -15,7 +15,7 @@ def sortGroupBySkills(groups, user):
     coursesInfo = json.load(file)
     sortedGroups = []
     for group in groups:
-        print(f"MATCHING FOR GROUP {group['name']}")
+        # print(f"MATCHING FOR GROUP {group['name']}")
         lookingForMatched = {}
         hasMatched = {}
         for course in coursesInfo:
@@ -27,7 +27,7 @@ def sortGroupBySkills(groups, user):
             if course in user['courses']:
                 # See if this user is what the group is looking for
                 for skill in group['lookingForSkills']:
-                    print(f"LOOKING FOR {skill} in {course}")
+                    # print(f"LOOKING FOR {skill} in {course}")
                     match = re.search(r'[\s|\"]'+skill+r'[\s|,|:|\"|\;]', coursesInfo[course], re.IGNORECASE)
                     if match and not skill in lookingForMatchedSkills:
                         if not skill in lookingForMatched:
@@ -37,7 +37,7 @@ def sortGroupBySkills(groups, user):
                 
                 # See if this group has existing synergies with the user
                 for skill in group['hasSkills']:
-                    print(f"HAS {skill} in {course}")
+                    # print(f"HAS {skill} in {course}")
                     match = re.search(r'[\s|\"]'+skill+r'[\s|,|:|\"|\;]', coursesInfo[course], re.IGNORECASE)
                     if match and not skill in hasMatchedSkills:
                         if not skill in hasMatched:
@@ -45,8 +45,8 @@ def sortGroupBySkills(groups, user):
                         else:
                             hasMatched[skill] += 1
         
-        print(lookingForMatched)
-        print(hasMatched)
+        # print(lookingForMatched)
+        # print(hasMatched)
         # Determine the synergy the user has with this group
         synergyScore = 0
 
@@ -58,11 +58,14 @@ def sortGroupBySkills(groups, user):
         for skill, count in hasMatched.items():
             synergyScore += count
 
-        print("FINISHED")
+        # print("FINISHED")
         sortedGroups.append({
             'groupId': group['id'],
             'score': synergyScore
         })
+
+    # Sort groups with highest synergy score first
+    sortedGroups = sorted(sortedGroups, key=lambda k: k['score'], reverse=True)
 
     return sortedGroups
 
