@@ -7,6 +7,8 @@ def index(request, id=id):
   rooms = []
   for room in Room.objects.all():
       rooms.append({
-        'name': room.name
+        'name': room.name,
+        'id': room.id,
+        'description': room.description
       })
   return JsonResponse(rooms, safe=False)

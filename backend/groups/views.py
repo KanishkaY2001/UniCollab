@@ -15,7 +15,7 @@ def index(request, id=id):
   groups = []
   for group in Group.objects.all():
       groups.append({
-        'name': name
+        'name': group.name
       })
   return JsonResponse(groups, safe=False)
     

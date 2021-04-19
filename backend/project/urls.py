@@ -23,6 +23,7 @@ urlpatterns = [
     path('student/', include('students.urls')),
     path('group/', include('groups.urls')),
     path('', include('csvs.urls', namespace='csvs')),
+    path('rooms/', include('rooms.urls'))
 ]
 
 
