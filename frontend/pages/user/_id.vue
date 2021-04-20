@@ -25,11 +25,12 @@
             height="300"
             item-height="64"
           >
+            <!-- <v-tooltip bottom> -->
             <template v-slot:default="{ item }">
-              <v-list-item :key="item.id" @click="$router.push(`/room`)">    
+              <v-list-item :key="item.id" @click="$router.push(`/room/${item.id}`)">    
                 <v-list-item-content>
                   <v-list-item-title>
-                    {{item.name}}
+                    <span>{{item.name}}</span>
                   </v-list-item-title>
                 </v-list-item-content>
     
@@ -46,6 +47,8 @@
               </v-list-item>
               <v-divider></v-divider>
             </template>
+            <!-- <span>{item.name}</span> -->
+            <!-- </v-tooltip> -->
           </v-virtual-scroll>
         </v-card>
       </v-col>
@@ -225,5 +228,18 @@ export default {
   font-size: 25px;
   // font-weight: bold;
   text-align: center;
+}
+span {
+  width: 100px; /* can be 100% ellipsis will happen when contents exceed it */ 
+  display: inline-block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+span:hover {
+  white-space: normal;
+  /* or: 
+  width: auto;
+  */
 }
 </style>
