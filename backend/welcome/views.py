@@ -21,7 +21,7 @@ def login(request, email, password):
     for student in Student.objects.all():
         if (student.email == email):
             if (student.password == password):
-                result = { student.id }
+                result = { "id" : student.id }
             break
     return JsonResponse(result, safe=False)
         
