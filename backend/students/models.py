@@ -16,5 +16,8 @@ class Student(models.Model):
     courses = models.ManyToManyField(Course, blank=True)
     photo = models.ImageField(upload_to='profile')
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         ordering = ['name']
