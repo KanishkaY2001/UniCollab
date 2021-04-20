@@ -24,10 +24,10 @@ def upload_file_view(request):
           # # row = row.replace(".", ' ')
           row = row.split(',')
           course = row[0]
-          skill = row[1]
+          info = row[1]
           obj = Course.objects.create(
             name = course,
-            skill = skill
+            info = info
           )
     obj.activated = True
     obj.save()

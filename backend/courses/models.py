@@ -3,7 +3,16 @@ from django.db import models
 # Create your models here.
 class Course(models.Model):
     name = models.CharField(max_length=140)
-    skill = models.CharField(max_length=900)
+    info = models.CharField(max_length=10000, default=True, blank=True, null=True)
+    class Meta:
+        ordering = ['name']
+
+class Skill(models.Model):
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.RESTRICT
+    )
+    name = models.CharField(max_length=200)
 
     class Meta:
         ordering = ['name']

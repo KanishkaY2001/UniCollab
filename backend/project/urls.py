@@ -20,24 +20,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('welcome/', include('welcome.urls')),
     path('student/', include('students.urls')),
     path('group/', include('groups.urls')),
     path('', include('csvs.urls', namespace='csvs')),
-    path('rooms/', include('rooms.urls')),
+    path('rooms/', include('rooms.urls'))
 ]
-
-
-# from django.contrib import admin
-# from django.urls import path, include
-# from django.conf import settings
-# from django.conf.urls.static import static
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('api/', include('students.urls')),
-#     path('', include('csvs.urls', namespace='csvs')),
-# ]
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

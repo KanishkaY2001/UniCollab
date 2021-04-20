@@ -4,19 +4,7 @@ from .views import *
 
 urlpatterns = [
     path('', index),
-    path('<int:id>', user)
+    path('<int:id>', user),
+    path('<int:id>/rooms', studentRooms),
+    path('<int:id>/groups', studentGroups)
 ]
-
-
-# from django.urls import path
-
-# from rest_framework import routers
-
-# from .views import *
-
-
-# router = routers.DefaultRouter()
-# router.register('students', StudentsViewSet)
-
-
-# urlpatterns = router.urls
