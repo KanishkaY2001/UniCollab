@@ -40,6 +40,7 @@
                     depressed
                     dark
                     color="#55CBD3"
+                    @click="joinRoom(item.id)"
                   >
                     Join
                   </v-btn>
@@ -198,6 +199,14 @@ export default {
     getUserPhoto() {
       console.log("http://localhost:8000" + this.user.photo)
       return "http://localhost:8000" + this.user.photo
+    },
+    joinRoom(rid) {
+      try {
+        let res = this.$axios.$get(`student/${this.user.id}/joinroom/${rid}`)
+        alert('JOIN')
+      }catch(e) {
+        console.log(e)
+      }
     }
   },
 }
