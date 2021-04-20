@@ -49,3 +49,17 @@ def studentGroups(request, id):
                 "photo": grMemb.group.photo
             })
     return JsonResponse(groups, safe=False)
+
+def joinRoom(request, id, rid):
+    result = { "id" : rid }
+    student = getStudent(id)
+    for room in Room.objects.all():
+        if (room.id == rid):
+            room.members.add(student)
+    return JsonResponse(result, safe=False)
+ 
+def getStudent(id):
+    for student in Student.objects.all():
+        if (student.id == id):
+            return student
+    return null
