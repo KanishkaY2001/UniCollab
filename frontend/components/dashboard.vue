@@ -15,8 +15,10 @@
       <v-row justify="end">
         <v-avatar
           class="mr-4"
-          color="#55CBD3"
           size="73">
+          <img
+            :src="photo"
+          >
         </v-avatar>
       </v-row>
     </v-col>
@@ -26,12 +28,7 @@
 
 <script>
 export default {
-  props: ["title"],
-  data() {
-    return {
-      roomName: "SENG2021 PROJECTS"
-    }
-  }
+  props: ["title", "photo"],
 }
 </script>
 

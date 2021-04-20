@@ -46,6 +46,8 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex"
+
 export default {
   data: () => ({
       pwd: "",
@@ -54,15 +56,16 @@ export default {
       value: false
   }),
   methods: {
+    ...mapMutations(["SAVE_USER"]),
     async login() {
       try{
-        let studentId = await this.$axios.get(`/welcome/login/${this.email}/${this.pwd}`)
-        studentId = studentId.data.id
-        console.log(studentId)
-        if(studentId == null) {
+        let user = await this.$axios.get(`student/login/${this.email}/${this.pwd}`)
+        if(user == null) {
           alert("Fail");
         }else{
-          this.$router.push(`/user/${studentId}`)
+          let info = user.data
+          this.SAVE_USER(info)
+          this.$router.push(`/user/${info.id}`)
         }
       }catch(e) {
         console.log(e)

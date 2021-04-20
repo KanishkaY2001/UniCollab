@@ -8,5 +8,6 @@ export const mutations = {
     if (!info) return;
     state.user = info;
     state.userId = info.id;
-  },
+    console.log(state.user.name)
+  }
 }

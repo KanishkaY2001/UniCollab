@@ -1,6 +1,6 @@
 <template>
   <div class="mt-10">
-    <dashboard :title="userName"></dashboard>
+    <dashboard :title="getUserName()" :photo="getUserPhoto()"></dashboard>
     <v-row cols="12" class="pb-10">
       <v-col cols="4" style="background-color: #8AE8EF">
         <img class="back-icon" src="/img/back.svg" @click="$router.back()">
@@ -81,7 +81,7 @@
               show-arrows
             >
               <v-slide-item
-                v-for="room in rooms"
+                v-for="room in myRooms"
                 :key="room.id"
               >
                 <v-card
@@ -118,7 +118,7 @@
               show-arrows
             >
               <v-slide-item
-                v-for="room in rooms"
+                v-for="room in myGruops"
                 :key="room.id"
               >
                 <v-card
@@ -152,40 +152,51 @@
 
 <script>
 import dashboard from '../../components/dashboard.vue'
+import { mapState } from "vuex"
+
 export default {
   components: { dashboard },
+  computed: {
+    ...mapState(["user"]),
+  },
+
+  // async asyncData({ $axios, params }) {
+  //   try {
+  //     let rooms = await $axios.$get(`/rooms/`);
+  //     let myRooms = await $axios.$get(`${this.user.id}/rooms`);
+  //     return { rooms, myRooms }
+  //   } catch (e) {
+  //     return { group: {} };
+  //   }
+  // },
+  async mounted() {
+    try {
+      this.rooms = await this.$axios.$get(`/rooms/`);
+      this.myRooms = await this.$axios.$get(`student/${this.user.id}/rooms`);
+      this.myGruops = await this.$axios.$get(`student/${this.user.id}/groups`);
+
+    }catch(e) {
+      console.log(e)
+    }
+  },
   data() {
     return {
       benched: 0,
       model: null,
-      rooms: [{
-        'name': 'SENG2021 Study',
-        'id': 1
-      },{
-        'name': 'SENG2022 Project',
-        'id': 1
-      },{
-        'name': 'SENG2023',
-        'id': 1
-      },{
-        'name': 'SENG2024',
-        'id': 1
-      },{
-        'name': 'SENG2021',
-        'id': 1
-            },{
-        'name': 'SENG2023',
-        'id': 1
-      },{
-        'name': 'SENG2024',
-        'id': 1
-      },{
-        'name': 'SENG2021',
-        'id': 1
-      }],
-      userName: "Welcome Noah"
+      rooms: [],
+      myRooms: [],
+      myGruops: []
     }
-  }
+  },
+  methods: {
+    getUserName() {
+      return "welcome " + this.user.name
+    },
+    getUserPhoto() {
+      console.log("http://localhost:8000" + this.user.photo)
+      return "http://localhost:8000" + this.user.photo
+    }
+  },
 }
 </script>
 

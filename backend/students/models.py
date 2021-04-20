@@ -14,7 +14,7 @@ class Student(models.Model):
     location = models.CharField(null=True, max_length=200)
     calendar = models.ManyToManyField(Event, blank=True)
     courses = models.ManyToManyField(Course, blank=True)
-    photo = models.ImageField(upload_to='profile')
+    photo = models.ImageField(upload_to='userAvatar')
 
     def __str__(self):
         return self.name

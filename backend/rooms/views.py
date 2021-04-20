@@ -50,5 +50,5 @@ def getStudent(id):
   for student in Student.objects.all():
     if (student.id == id):
       return student
-  return null
+  return None
         
