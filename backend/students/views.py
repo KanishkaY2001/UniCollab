@@ -44,7 +44,7 @@ def studentGroups(request, id):
     groups = []
     for grMemb in GroupMember.objects.all():
         photo = json.dumps(str(grMemb.group.photo))
-        if (grMemb.member.id == id):
+        if (grMemb.member.id == id or grMemb.group.owner.id == id):
             groups.append({
                 "name": grMemb.group.name,
                 "id": grMemb.group.id,
