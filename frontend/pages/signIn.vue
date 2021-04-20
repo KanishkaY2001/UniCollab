@@ -7,16 +7,19 @@
     <v-col cols="10" class="content">
       <v-row justify="center" class="mt-14"><div class="title-text">Log In</div></v-row>
       <v-row class="ml-6 mr-6 mt-16">
-        <v-text-field placeholder="Username (email)" label="Username (email)" outlined></v-text-field>
+        <v-text-field
+          v-model="email"
+          placeholder="Username (email)"
+          label="Username (email)"
+          outlined>
+        </v-text-field>
       </v-row>
       <v-row class="ml-6 mr-6 mt-5">
         <v-text-field
-            :value="userPassword"
+            v-model="pwd"
             label="Password"
             placeholder="Password"
             :append-icon="value ? 'mdi-eye-off' : 'mdi-eye'"
-            @click:append="() => (value = !value)"
-            :type="value ? 'password' : 'text'"
             outlined
         ></v-text-field>
       </v-row>
@@ -45,13 +48,25 @@
 <script>
 export default {
   data: () => ({
-      userPassword: "",
-      valid: true,
-      value: true,
+      pwd: "",
+      email: "",
+      studentId: "",
+      value: false
   }),
   methods: {
-    login() {
-      this.$router.push(`/user/1`)
+    async login() {
+      try{
+        let studentId = await this.$axios.get(`/welcome/login/${this.email}/${this.pwd}`)
+        studentId = studentId.data.id
+        console.log(studentId)
+        if(studentId == null) {
+          alert("Fail");
+        }else{
+          this.$router.push(`/user/${studentId}`)
+        }
+      }catch(e) {
+        console.log(e)
+      }
     }
   },
 }

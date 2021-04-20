@@ -1,18 +1,24 @@
 <template>
 <div>
-  <v-row cols="12" justify="space-between">
+  <v-row cols="13" class="mt-10 mb-5" justify="space-between">
     <v-col cols="2">
-      <v-img contain class="logo1" src="/img/logo.svg"/>
+      <v-row justify="center">
+        <v-img contain class="logo1" src="/img/logo.svg"/>
+      </v-row>
     </v-col>
-    <v-col cols="8" justify="center" class="pr-6 mt-3">
-      <div class="room-name">{{this.title}}</div>
+    <v-col cols="8" align-self="center">
+      <v-row justify="center" class="ml-2">
+        <div class="room-name">{{this.title}}</div>
+      </v-row>
     </v-col>
-    <v-col cols="2">
-      <v-avatar
-        class="mt-2"
-        color="#55CBD3"
-        size="67">
-      </v-avatar>
+    <v-col cols="2" align-self="center">
+      <v-row justify="end">
+        <v-avatar
+          class="mr-4"
+          color="#55CBD3"
+          size="73">
+        </v-avatar>
+      </v-row>
     </v-col>
   </v-row>
 </div>
@@ -31,8 +37,8 @@ export default {
 
 <style scoped>
 .logo1 {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
 }
 
 .room-name{

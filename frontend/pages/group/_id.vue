@@ -14,10 +14,12 @@
       <v-col cols="10">
         <v-row>
           <v-img contain class="ml-4 mt-7" style="max-width: 120px" :src="getImageURL"/>
-          <v-col cols="7" style="background-color: white" class="mt-7 ml-7">
-            <div style="color: #55CBD3">About us</div>
-            <div style="font-size: 13px; color: #646868">
-              {{group.descript}}
+          <v-col cols="7" class="pt-8 ml-7">
+            <div style="background-color: white; border-radius: 10px; height: 100px" class="pl-4 pt-2">
+              <div style="color: #55CBD3; font-size: 20px">About us</div>
+              <div style="font-size: 16px; color: #646868">
+                {{group.descript}}
+              </div>
             </div>
           </v-col>
           <!-- <v-btn dark color="#55CBD3" class="mt-10 mr-8">JOIN</v-btn> -->
@@ -49,7 +51,7 @@
     </v-row>
     <v-row cols="12" justify="space-between">
     <v-col cols="3" class="mt-10 ml-10 skill-section">
-      <div class="subtitle">We have:</div>
+      <div class="subtitle mt-2">We have:</div>
       <div class="we-have mt-5">
         <v-row class="ml-6 pt-3 mb-3">
           <!-- <div> -->
@@ -62,45 +64,90 @@
           <!-- </div> -->
         </v-row>
       </div>
-      <div class="subtitle">Looking for:</div>
+      <div class="subtitle mt-6">Looking for:</div>
       <div class="we-have mt-5">
         <v-row class="ml-6 pt-3 mb-3">
           <!-- <div> -->
             <p
               class="mr-7"
               style="color: #646868"
-              v-for="skill in needSkill"
+              v-for="skill in group.skills"
               v-bind:key="skill"
             >{{skill}}</p>
           <!-- </div> -->
         </v-row>
       </div>
-      <div class="subtitle">Member:</div>
+      <div class="subtitle mt-6">Member:</div>
       <div class="mt-4 mb-4">
         <!-- <v-col> -->
           <v-row
             class="ml-4"
             style="color: #646868"
-            v-for="mem in members"
-            v-bind:key="mem.is"
+            v-for="mem in group.members"
+            v-bind:key="mem.id"
           >
             <v-avatar
               class="mt-2"
               color="#D2F3F5"
               size="40">
             </v-avatar>
-            <p class="ml-2 mt-4">{{mem.name}}</p>
+            <p class="ml-4 mt-4">{{mem.name}}</p>
           </v-row>
         <!-- </v-col> -->
       </div>
     </v-col>
-    <v-col cols="7" class="ml-1">
-      <div class="mt-10 schedule-title">Preferred Meeting Times</div>
-      <v-sheet class="mt-10" height="300" width="400">
+    <v-col cols="8" class="mr-3">
+      <div class="mt-10 schedule-title mb-3">Preferred Meeting Times</div>
+      <v-sheet
+        tile
+        height="56"
+        class="d-flex"
+      >
+        <v-btn
+          icon
+          class="ma-2"
+          @click="$refs.calendar.prev()"
+        >
+          <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
+        <v-select
+          v-model="type"
+          dense
+          disabled
+          outlined
+          hide-details
+          class="ma-2"
+          label="week"
+        ></v-select>
+        <v-select
+          v-model="weekday"
+          :items="weekdays"
+          dense
+          outlined
+          hide-details
+          label="weekdays"
+          class="ma-2"
+        ></v-select>
+        <v-spacer></v-spacer>
+        <v-btn
+          icon
+          class="ma-2"
+          @click="$refs.calendar.next()"
+        >
+          <v-icon>mdi-chevron-right</v-icon>
+        </v-btn>
+      </v-sheet>
+      <v-sheet height="600">
         <v-calendar
           ref="calendar"
-          color="primary"
-          type="week"
+          v-model="value"
+          :weekdays="weekday"
+          :type="type"
+          :events="events"
+          :event-overlap-mode="mode"
+          :event-overlap-threshold="30"
+          :event-color="getEventColor"
+          @change="getEvents"
         ></v-calendar>
       </v-sheet>
     </v-col>
@@ -138,14 +185,64 @@ export default {
       needSkill: ["React", "CSS", "FLASK"],
       roomName: "Room: SENG2021 PROJECTS",
       groupName: "Attack on HD",
-      description: "We are passionate, enthusiastic, with highly capable coding abilties to ATTACK that HD with full force! Join us if u wanna work hard :)"
+      description: "We are passionate, enthusiastic, with highly capable coding abilties to ATTACK that HD with full force! Join us if u wanna work hard :)",
+      type: 'week',
+      types: ['month', 'week', 'day', '4day'],
+      // types: ['month', 'week', 'day', '4day'],
+      mode: 'stack',
+      modes: ['stack', 'column'],
+      weekday: [0, 1, 2, 3, 4, 5, 6],
+      weekdays: [
+        { text: 'Sun - Sat', value: [0, 1, 2, 3, 4, 5, 6] },
+        { text: 'Mon - Sun', value: [1, 2, 3, 4, 5, 6, 0] },
+        { text: 'Mon - Fri', value: [1, 2, 3, 4, 5] },
+        { text: 'Mon, Wed, Fri', value: [1, 3, 5] },
+      ],
+      value: '',
+      events: [],
+      colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+      names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }
   },
   computed: {
     getImageURL() {
-      console.log("http://127.0.0.1:8000/media/" + "groupAvatar/C6937000-0EC0-4603-B2D5-3834CB8ACEB5_LsI6YJ1.jpeg")
-      return "http://127.0.0.1:8000/media/" + "groupAvatar/C6937000-0EC0-4603-B2D5-3834CB8ACEB5_LsI6YJ1.jpeg"
+      var url = this.group.photo.replace(/^"(.*)"$/, '$1')
+      return "http://127.0.0.1:8000/media/" + url
     }
+  },
+  methods: {
+    getEvents ({ start, end }) {
+      const events = []
+
+      const min = new Date(`${start.date}T00:00:00`)
+      const max = new Date(`${end.date}T23:59:59`)
+      const days = (max.getTime() - min.getTime()) / 86400000
+      const eventCount = this.rnd(days, days + 20)
+
+      for (let i = 0; i < eventCount; i++) {
+        const allDay = this.rnd(0, 3) === 0
+        const firstTimestamp = this.rnd(min.getTime(), max.getTime())
+        const first = new Date(firstTimestamp - (firstTimestamp % 900000))
+        const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
+        const second = new Date(first.getTime() + secondTimestamp)
+
+        events.push({
+          name: this.names[this.rnd(0, this.names.length - 1)],
+          start: first,
+          end: second,
+          color: this.colors[this.rnd(0, this.colors.length - 1)],
+          timed: !allDay,
+        })
+      }
+
+      this.events = events
+    },
+    getEventColor (event) {
+      return event.color
+    },
+    rnd (a, b) {
+      return Math.floor((b - a + 1) * Math.random()) + a
+    },
   },
   async mounted() {
     try {
