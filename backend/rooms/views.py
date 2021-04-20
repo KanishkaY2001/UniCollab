@@ -4,6 +4,7 @@ from students.serializers import StudentSerializer
 
 from groups.models.groups import Group
 from .models import Room, Member
+from students.models import Student
 # Create your views here.
 def index(request, id=id):
   rooms = []
@@ -37,15 +38,17 @@ def getRoomMember(id):
       roomMembers.append(info)
   return roomMembers
       
-def getGroups(request, id):
-  groups = []
-  for group in Group.objects.all():
-    if (group.room.id == id):
-      members = getRoomMember(id)
-      groups.append({
-        'name': group.name,
-        'id': group.id,
-        'description': group.description,
-        'members': members
-      })
-  return JsonResponse(groups, safe=False)
+def joinRoom(request, id, rid):
+  student = getStudent(id)
+  for room in Room.objects.all():
+    if (room.id == rid):
+      room.members.add(student)
+  return rid
+  
+
+def getStudent(id):
+  for student in Student.objects.all():
+    if (student.id == id):
+      return student
+  return null
+        
