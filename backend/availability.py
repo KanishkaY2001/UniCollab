@@ -4,7 +4,7 @@ import datetime
 '''Given a list of group objects and the current user object, sorts the groups in
 terms of availability compatibilities (in terms of percentage of group's meetings the
 user can attend)'''
-def sortGroupsByAvailabilities(groups, user):
+def sortGroupByAvailabilities(groups, user):
     sortedGroups = []
 
     # Convert the user's calendar to date time objects
@@ -42,10 +42,17 @@ def sortGroupsByAvailabilities(groups, user):
 
         percentageAvailable = nAvailable / nMeetings
 
+        matchedScore = 0
+        if percentageAvailable >= 0.6:
+            matchedScore = 1
+        if percentageAvailable >= 0.9:
+            matchedScore = 2
+
         print(f"You are available for {percentageAvailable} of {group['name']}'s meetings")
         sortedGroups.append({
-            'groupId': group['id'],
-            'score': percentageAvailable
+            'id': group['id'],
+            'score': percentageAvailable,
+            'match': matchedScore
         })
 
     # Sort for groups with highest score first
@@ -170,4 +177,4 @@ groups = [
     }
 ]
 
-print(sortGroupsByAvailabilities(groups, user))
+print(sortGroupByAvailabilities(groups, user))
