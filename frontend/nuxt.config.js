@@ -1,5 +1,4 @@
 import colors from 'vuetify/es5/util/colors'
-import createPersistedState from 'vuex-persistedstate'
 
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -42,14 +41,14 @@ export default {
   ],
   
   axios: {
-    baseURL: "http://localhost:8000/"
+    baseURL: "http://localhost:8000/api"
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      // dark: true,
+      dark: true,
       themes: {
         dark: {
           primary: colors.blue.darken2,
@@ -66,6 +65,5 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-  },
-  mode: 'spa'
+  }
 }
