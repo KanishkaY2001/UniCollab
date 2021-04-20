@@ -21,3 +21,4 @@ class Student(models.Model):
 
     class Meta:
         ordering = ['name']
+        unique_together = ["email"]

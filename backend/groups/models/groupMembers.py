@@ -6,10 +6,13 @@ from groups.models.groups import Group
 class GroupMember(models.Model):
   group = models.ForeignKey(
     'groups.Group',
-    on_delete=models.RESTRICT
+    on_delete=models.CASCADE
   )
   member = models.ForeignKey(
     'students.Student',
-    on_delete=models.RESTRICT
+    on_delete=models.CASCADE
   )
   status = models.BooleanField(default=False)
+
+  class Meta:
+    unique_together = ['group', 'member']

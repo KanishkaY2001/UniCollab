@@ -7,9 +7,12 @@ from courses.models import Skill
 class GroupSkill(models.Model):
   group = models.ForeignKey(
     'groups.Group',
-    on_delete=models.RESTRICT
+    on_delete=models.CASCADE
   )
   skill = models.ForeignKey(
     'courses.Skill',
-    on_delete=models.RESTRICT
+    on_delete=models.CASCADE
   )
+
+  class Meta:
+    unique_together = ['group', 'skill']
