@@ -1,6 +1,6 @@
 <template>
 <div>
-  <dashboard :title="roomName"></dashboard>
+  <dashboard :title="getRoomName(group.room)" :photo="getUserPhoto()"></dashboard>
   <div class="frame pb-10 mb-10">
     <v-row class="mt-10" cols="12" justify="space-between">
       <img class="back-icon ml-3" src="/img/back.svg" @click="$router.back()">
@@ -182,7 +182,6 @@ export default {
   components: {dashboard, join},
   data() {
     return {
-      userId: 1,
       members: [{'id': 1, 'image': "", 'name': "Sam"},{'id': 2, 'image': "", 'name': "Amy"}],
       haveSkill: ["python", "JavaScript", "sususususususlong"],
       needSkill: ["React", "CSS", "FLASK"],
@@ -216,6 +215,13 @@ export default {
     ...mapState(["user"]),
   },
   methods: {
+    getRoomName() {
+      return "Room: " + this.group.room
+    },
+    getUserPhoto() {
+      console.log("http://localhost:8000" + this.user.photo)
+      return "http://localhost:8000" + this.user.photo
+    },
     getEvents ({ start, end }) {
       const events = []
 

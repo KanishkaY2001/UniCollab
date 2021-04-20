@@ -60,8 +60,8 @@ export default {
     async login() {
       try{
         let user = await this.$axios.get(`student/login/${this.email}/${this.pwd}`)
-        console.log(user.data)
-        if(user.data != {}) {
+        console.log(user.data.id)
+        if(user.data.id !== undefined) {
           let info = user.data
           this.SAVE_USER(info)
           this.$router.push(`/user/${info.id}`)

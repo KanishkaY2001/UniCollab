@@ -64,7 +64,7 @@
         </v-row>
         <v-row justify="center">
           <v-btn 
-            dark
+            disabled
             large
             elevation="0"
             color="#55CBD3"
