@@ -4,10 +4,8 @@ import json
 
 '''Given a list of group objects and the current user object, sorts the groups in
 terms of skill compatibilities (groups which match the user's skills.
-
 Skill compatibilitiy is determined by how needed a user is by a group (lookingFor)
 and how well the user already synergises with the group's existing 'We Have' skills.
-
 Furthermore, the more times a keyword pops up in different courses, the more 'familiar'
 a user is with that keyword and so, '''
 def sortGroupBySkills(groups, user):
@@ -54,14 +52,22 @@ def sortGroupBySkills(groups, user):
         for skill, count in lookingForMatched.items():
             synergyScore += count
 
-        # User having skills that the group already has is worth 0.5
+        # User having skills that the group already has is worth 0.3
         for skill, count in hasMatched.items():
-            synergyScore += count
+            synergyScore += count * 0.5
 
         # print("FINISHED")
+        
+        matchScore = 0
+        if synergyScore >= 1:
+            matchScore = 1
+        if synergyScore >= 3:
+            matchScore = 2
+
         sortedGroups.append({
-            'groupId': group['id'],
-            'score': synergyScore
+            'id': group['id'],
+            'score': synergyScore,
+            'match': matchScore
         })
 
     # Sort groups with highest synergy score first
@@ -73,7 +79,7 @@ def sortGroupBySkills(groups, user):
 '''TESTING DATA'''
 user = {
     # And other data such as id, etc
-    "courses": "COMP1511, COMP1531",
+    "courses": ["COMP1511", "COMP1531"],
 }
 
 groups = [
@@ -101,18 +107,18 @@ groups = [
         "lookingForSkills": ["C"],
         "hasSkills": ["Data Modelling", "Programming", "C"]
     },
-    # {
-    #     "id": 5,
-    #     "name": "Group 5",
-    #     "lookingForSkills": ["Python", "SQLite"],
-    #     "hasSkills": ["Data Modelling", "Programming", "C"]
-    # },
-    # {
-    #     "id": 6,
-    #     "name": "Group 6",
-    #     "lookingForSkills": ["Python", "SQLite"],
-    #     "hasSkills": ["Data Modelling", "Programming", "C"]
-    # }
+    {
+        "id": 5,
+        "name": "Group 5",
+        "lookingForSkills": ["Python", "C"],
+        "hasSkills": ["Data Modelling", "Algorithms"]
+    },
+    {
+        "id": 6,
+        "name": "Group 6",
+        "lookingForSkills": ["Java", "OOP"],
+        "hasSkills": ["Shell", "Perl"]
+    }
 ]
 
 print(sortGroupBySkills(groups, user))
