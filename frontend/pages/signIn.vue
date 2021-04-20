@@ -60,12 +60,13 @@ export default {
     async login() {
       try{
         let user = await this.$axios.get(`student/login/${this.email}/${this.pwd}`)
-        if(user == null) {
-          alert("Fail");
-        }else{
+        console.log(user.data)
+        if(user.data != {}) {
           let info = user.data
           this.SAVE_USER(info)
           this.$router.push(`/user/${info.id}`)
+        }else{
+          alert("incorrect username or password")
         }
       }catch(e) {
         console.log(e)

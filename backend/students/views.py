@@ -48,7 +48,7 @@ def studentGroups(request, id):
             groups.append({
                 "name": grMemb.group.name,
                 "id": grMemb.group.id,
-                "photo": grMemb.group.photo
+                "photo": photo
             })
     return JsonResponse(groups, safe=False)
 
