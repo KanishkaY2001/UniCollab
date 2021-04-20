@@ -13,7 +13,7 @@
     <v-row class="group-info" cols="12" justify="center">
       <v-col cols="10">
         <v-row>
-          <v-img contain class="ml-4 mt-7" style="max-width: 120px" :src="getImageURL"/>
+          <v-img contain class="ml-4 mt-7" style="max-width: 120px" :src="getImageURL()"/>
           <v-col cols="7" class="pt-8 ml-7">
             <div style="background-color: white; border-radius: 10px; height: 100px" class="pl-4 pt-2">
               <div style="color: #55CBD3; font-size: 20px">About us</div>
@@ -58,7 +58,7 @@
             <p
               class="mr-7"
               style="color: #646868"
-              v-for="skill in haveSkill"
+              v-for="skill in group.skills"
               v-bind:key="skill"
             >{{skill}}</p>
           <!-- </div> -->
@@ -88,8 +88,10 @@
           >
             <v-avatar
               class="mt-2"
-              color="#D2F3F5"
               size="40">
+              <img
+                :src="getPhoto(mem.photo)"
+              >
             </v-avatar>
             <p class="ml-4 mt-4">{{mem.name}}</p>
           </v-row>
@@ -159,19 +161,20 @@
 <script>
 import dashboard from "@/components/dashboard"
 import join from "@/components/group/join"
+import { mapState } from "vuex"
+
 export default {
   async asyncData({ $axios, params }) {
     try {
       let group = await $axios.$get(`/group/` + params.id);
-      let permission = await $axios.$get(`/group/` + params.id + `/user/1/permission`);
       // console.log(group.gasdg)
       // console.log(permission)
-      permission=  {
-        'inGroup': true,
-        'isMember': true,
-        'isOwner': true,
-      }
-      return { group, permission};
+      // permission=  {
+      //   'inGroup': true,
+      //   'isMember': true,
+      //   'isOwner': true,
+      // }
+      return { group };
     } catch (e) {
       return { group: {} };
     }
@@ -181,7 +184,7 @@ export default {
     return {
       userId: 1,
       members: [{'id': 1, 'image': "", 'name': "Sam"},{'id': 2, 'image': "", 'name': "Amy"}],
-      haveSkill: ["python", "JavaScript", "python", "sususususususlong"],
+      haveSkill: ["python", "JavaScript", "sususususususlong"],
       needSkill: ["React", "CSS", "FLASK"],
       roomName: "Room: SENG2021 PROJECTS",
       groupName: "Attack on HD",
@@ -202,13 +205,15 @@ export default {
       events: [],
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+      permission:  {
+        'inGroup': false,
+        'isMember': false,
+        'isOwner': false,
+      }
     }
   },
   computed: {
-    getImageURL() {
-      var url = this.group.photo.replace(/^"(.*)"$/, '$1')
-      return "http://127.0.0.1:8000/media/" + url
-    }
+    ...mapState(["user"]),
   },
   methods: {
     getEvents ({ start, end }) {
@@ -237,21 +242,38 @@ export default {
 
       this.events = events
     },
+    getImageURL() {
+      var url = this.group.photo.replace(/^"(.*)"$/, '$1')
+      return "http://127.0.0.1:8000/media/" + url
+    },
+    getPhoto(path) {
+      return "http://localhost:8000" + path
+    },
     getEventColor (event) {
       return event.color
     },
     rnd (a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a
     },
+    async getPermission() {
+      try{
+        let permission = await this.$axios.$get(`/group/` + this.$route.params.id + `/user/${this.user.id}/permission`);
+        this.permission = permission
+      }catch(e) {
+        console.log(e)
+      }
+
+    }
   },
   async mounted() {
-    try {
-      let permission = await this.$axios.$get(`/group/${route.params.id}/user/${userId}/permission/`);
-      this.permission = permission;
-      console.log(permission)
-    } catch (e) {
-      console.log(e);
-    }
+    this.getPermission()
+    // try {
+    //   let permission = await this.$axios.$get(`/group/${route.params.id}/user/${userId}/permission/`);
+    //   this.permission = permission;
+    //   console.log(permission)
+    // } catch (e) {
+    //   console.log(e);
+    // }
   }
 }
 </script>
