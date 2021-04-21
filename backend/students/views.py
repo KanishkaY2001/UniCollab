@@ -59,6 +59,7 @@ def addCourse(request, id, cname):
         if (course.name == cname):
             student.courses.add(course)
             coursedata = CourseSerializer(course).data
+            student.save()
             return JsonResponse(coursedata, safe=False)
     ## ADD IN HERE FOR NEW COURSE CREATION ##
     print(cname)
