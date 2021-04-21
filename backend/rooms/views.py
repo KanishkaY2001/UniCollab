@@ -63,11 +63,6 @@ def createGroup(request, id, rid, name):
     name=name,
     preferredmeetingLoc=student.location
   )
-  GroupMember.objects.create(
-    group=group,
-    member=student,
-    status=True
-  )
   group.save()
   groupRet = { "id" : group.id }
   return JsonResponse(groupRet, safe=False)

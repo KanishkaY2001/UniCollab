@@ -8,7 +8,7 @@ from groups.models.groups import Group
 from groups.models.groupMembers import GroupMember
 from courses.models import Course
 from courses.serializers import CourseSerializer
-from get_event import main
+from sync_calendar import main
 
 import json
 # Create your views here.
@@ -80,9 +80,9 @@ def syncCalendar(request, id):
     events = main()
     for event in events:
         studEvent = Event.objects.create(
-            name=event["name"],
-            start=event["start"],
-            end=event["end"]
+            name=event['name'],
+            start=event['start'],
+            end=event['end']
         )
         student.calendar.add(studEvent)
         calendarRet.append(EventSerializer(studEvent).data)
@@ -103,13 +103,23 @@ def studentGroups(request, id):
     groups = []
     for grMemb in GroupMember.objects.all():
         photo = json.dumps(str(grMemb.group.photo))
-        if (grMemb.member.id == id or grMemb.group.owner.id == id):
+        if (grMemb.member.id == id):
             groups.append({
                 "name": grMemb.group.name,
                 "id": grMemb.group.id,
                 "photo": photo,
                 'descript': grMemb.group.description,
                 "room":  grMemb.group.room.name
+            })
+    for group in Group.objects.all():
+        photo = json.dumps(str(group.photo))
+        if (group.owner.id == id):
+            groups.append({
+                "name": group.name,
+                "id": group.id,
+                "photo": photo,
+                'descript': group.description,
+                "room":  group.room.name
             })
     return JsonResponse(groups, safe=False)
 
@@ -157,6 +167,9 @@ def leaveRoom(request, id, rid):
     room = Room.objects.get(id=rid)
     room.members.remove(student)
     room.save()
+    for grpMemb in GroupMember.objects.all():
+        if grpMemb.member == student:
+            grpMemb.delete()
     return JsonResponse(result, safe=False)
 
 def deleteCourse(request, id, cname):

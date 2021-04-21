@@ -9,5 +9,6 @@ urlpatterns = [
   path('<int:gid>/photo/<str:photo>', addPhoto),
   path('<int:gid>/description/<str:descrip>', addDes),
   path('<int:gid>/calendar', addCalendar),
-  path('<int:gid>/delete', deleteGroup)
+  path('<int:gid>/delete', deleteGroup),
+  path('<int:gid>/join/<int:id>', joinGroup)
 ]

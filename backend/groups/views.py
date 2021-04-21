@@ -9,6 +9,7 @@ from groups.models.groupMembers import GroupMember
 from groups.models.groupCalendars import Calendar
 from rooms.models import Room
 from availability import dummyGroups
+from students.models import Student
 
 from students.serializers import StudentSerializer
 from groups.serializers import CalendarSerializer
@@ -142,7 +143,7 @@ def addDes(request, gid, descrip):
 def addCalendar(request, gid):
   events = []
   group = Group.objects.get(id=gid)
-  dummyEvents = dummyGroups[gid-7]
+  dummyEvents = dummyGroups[gid-1]
   for event in dummyEvents["preferredMeetingTimes"]:
         cal = Calendar.objects.create(
           group=group,
@@ -161,6 +162,17 @@ def deleteGroup(request, gid):
         if (member.group == group):
               member.delete()
   group.delete()
+  return JsonResponse(result, safe=False)
+
+def joinGroup(request, gid, id):
+  result = {}
+  student = Student.objects.get(id=id)
+  group = Group.objects.get(id=gid)
+  GroupMember.objects.create(
+    group=group,
+    member=student,
+    status=True
+  )
   return JsonResponse(result, safe=False)
 
 
