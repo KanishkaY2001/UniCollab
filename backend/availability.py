@@ -83,9 +83,9 @@ user = {
     ]
 }
 
-groups = [
+dummyGroups = [
     {
-        "id": 1,
+        "id": 7,
         "name": "Group 1",
         "preferredMeetingTimes": [
             {
@@ -101,7 +101,7 @@ groups = [
         ]
     },
     {
-        "id": 2,
+        "id": 8,
         "name": "Group 2",
         "preferredMeetingTimes": [
             {
@@ -117,7 +117,7 @@ groups = [
         ]
     },
     {
-        "id": 3,
+        "id": 9,
         "name": "Group 3",
         "preferredMeetingTimes": [
             {
@@ -138,7 +138,7 @@ groups = [
         ]
     },
     {
-        "id": 4,
+        "id": 10,
         "name": "Group 4",
         "preferredMeetingTimes": [
             {
@@ -149,7 +149,7 @@ groups = [
         ]
     },
     {
-        "id": 5,
+        "id": 11,
         "name": "Group 5",
         "preferredMeetingTimes": [
             {
@@ -160,7 +160,7 @@ groups = [
         ]
     },
     {
-        "id": 6,
+        "id": 12,
         "name": "Group 6",
         "preferredMeetingTimes": [
             {
@@ -177,4 +177,4 @@ groups = [
     }
 ]
 
-print(sortGroupByAvailabilities(groups, user))
+print(sortGroupByAvailabilities(dummyGroups, user))
