@@ -25,6 +25,8 @@
           <!-- <v-btn dark color="#55CBD3" class="mt-10 mr-8">JOIN</v-btn> -->
           <join
             v-if="permission.inGroup==false"
+            :userId="user.id"
+            :groupId="group.id"
           ></join>
           <v-btn
             small
@@ -32,6 +34,7 @@
             dark
             color="#55CBD3"
             class="mt-10 ml-2"
+            @click="joinGroup()"
           >Request Sent</v-btn>
           <v-btn
             small
@@ -45,6 +48,7 @@
             dark
             color="#55CBD3"
             class="mt-10 ml-2"
+            @click="leaveGroup()"
           >LEAVE</v-btn>        
         </v-row>
       </v-col>
@@ -280,8 +284,14 @@ export default {
       }catch(e) {
         console.log(e)
       }
+    },
+    async leaveGroup() {
+      try {
+        // let res = await this.$axios.$get(``)
+      }catch(e) {
 
-    }
+      }
+    },
   },
   async mounted() {
     this.getPermission()
