@@ -165,7 +165,7 @@ export default {
   },
   async mounted() {
     try {
-      this.rooms = await this.$axios.$get(`/rooms/`);
+      this.rooms = await this.$axios.$get(`/student/${this.user.id}/allrooms`);
       this.myRooms = await this.$axios.$get(`student/${this.user.id}/rooms`);
       this.myGruops = await this.$axios.$get(`student/${this.user.id}/groups`);
 
