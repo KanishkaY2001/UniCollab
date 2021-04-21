@@ -148,3 +148,36 @@ def login(request, email, password):
                 }
             break
     return JsonResponse(result, safe=False)
+
+def leaveRoom(request, id, rid):
+    result = {}
+    student = Student.objects.get(id=id)
+    room = Room.objects.get(id=rid)
+    room.members.remove(student)
+    room.save()
+    return JsonResponse(result, safe=False)
+
+def deleteCourse(request, id, cname):
+    result = {}
+    student = Student.objects.get(id=id)
+    for course in Course.objects.all():
+        if course.name == cname:
+            student.courses.remove(course)
+            student.save()
+    return JsonResponse(result, safe=False)
+
+def getRoomsNotIn(request, id):
+    rooms = []
+    valid = 0
+    for room in Room.objects.all():
+        for memb in room.members.all():
+            if (memb.id == id):
+                valid = 1
+                break
+        if valid == 0:
+            rooms.append({
+                "name": room.name,
+                "id": room.id
+            })
+        valid = 0
+    return JsonResponse(rooms, safe=False)
