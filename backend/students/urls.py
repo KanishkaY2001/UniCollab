@@ -15,6 +15,6 @@ urlpatterns = [
     path('<int:id>/removecourse/<str:cname>', deleteCourse),
     path('<int:id>/location/<str:loc>', addLocation),
     path('<int:id>/sync', syncCalendar),
-    path('<int:id>/leave/<int:rid>', leaveRoom)
+    path('<int:id>/leaveroom/<int:rid>', leaveRoom)
 
 ]

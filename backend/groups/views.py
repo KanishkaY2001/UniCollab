@@ -6,7 +6,6 @@ import json
 from .models.groups import Group
 # from students.models import Student
 from groups.models.groupMembers import GroupMember
-from groups.models.groupSkills import GroupSkill
 from groups.models.groupCalendars import Calendar
 from rooms.models import Room
 
@@ -76,7 +75,7 @@ def getGroupJson(group):
     # endTime = group.preferredmeetingEndTime.strftime("%Y-%m-%d %H:%M")
     id = group.id
     members = getMember(id)
-    skills = getSkills(id)
+    # skills = getSkills(id)
     vacancy = group.capacity - len(members) - 1
     events = getCalendar(id)
     result = {
@@ -88,7 +87,7 @@ def getGroupJson(group):
       'descript': group.description,
       'location': group.preferredmeetingLoc,
       'photo': photo,
-      'skills': skills,
+      'skills': group.skills,
       'capacity': group.capacity,
       'vacancy': vacancy,
       'events': events
@@ -110,12 +109,12 @@ def getMember(id):
 
   return members
  
-def getSkills(id):
-  skills = []
-  for gk in GroupSkill.objects.all():
-    if(gk.group.id == id):
-      skills.append(gk.skill.name)
-  return skills
+# def getSkills(id):
+#   skills = []
+#   for gk in GroupSkill.objects.all():
+#     if(gk.group.id == id):
+#       skills.append(gk.skill.name)
+#   return skills
 
 def getCalendar(id):
   events = []

@@ -93,9 +93,8 @@
                   height="120"
                   width="115"
                   color="#D2F3F5"
-                  @click="$router.push(`/room/${room.id}`)"
                 >
-                <div style="text-align: center; color:#646868" class="mt-2">{{room.name}}</div>
+                <div style="text-align: center; color:#646868" class="mt-2" @click="$router.push(`/room/${room.id}`)">{{room.name}}</div>
                 <v-btn
                   class="mt-9 ml-6"
                   style="position: absolute; bottom: 10%"
@@ -123,17 +122,17 @@
               show-arrows
             >
               <v-slide-item
-                v-for="room in myGruops"
-                :key="room.id"
+                v-for="g in myGruops"
+                :key="g.id"
               >
                 <v-card
                   class="ma-2"
                   height="120"
                   width="115"
                   color="#D2F3F5"
-                  @click="$router.push(`/group/1`)"
+                  @click="$router.push(`/group/${g.id}`)"
                 >
-                <div style="text-align: center; color:#646868" class="mt-2">{{room.name}}</div>
+                <div style="text-align: center; color:#646868" class="mt-2">{{g.name}}</div>
                 <v-btn
                   class="mt-9 ml-6"
                   style="position: absolute; bottom: 10%"
@@ -199,9 +198,10 @@ export default {
         console.log(e)
       }
     },
-    leaveRoom(rid) {
+    async leaveRoom(rid) {
       try {
-        let res = this.$axios.$get(`student/${this.user.id}/leaveroom/${rid}`)
+        let res = await this.$axios.$get(`student/${this.user.id}/leaveroom/${rid}`)
+        this.myRooms = await this.$axios.$get(`student/${this.user.id}/rooms`);
         alert('LEAVE')
       }catch(e) {
         console.log(e)

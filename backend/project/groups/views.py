@@ -6,7 +6,6 @@ import json
 from .models.groups import Group
 # from students.models import Student
 from groups.models.groupMembers import GroupMember
-from groups.models.groupSkills import GroupSkill
 from groups.models.groupCalendars import Calendar
 from rooms.models import Room
 
@@ -105,12 +104,12 @@ def getMember(id):
       members.append(info)
   return members
  
-def getSkills(id):
-  skills = []
-  for gk in GroupSkill.objects.all():
-    if(gk.group.id == id):
-      skills.append(gk.skill.name)
-  return skills
+# def getSkills(id):
+#   skills = []
+#   for gk in GroupSkill.objects.all():
+#     if(gk.group.id == id):
+#       skills.append(gk.skill.name)
+#   return skills
 
 def getCalendar(id):
   events = []

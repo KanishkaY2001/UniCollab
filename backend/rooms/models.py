@@ -6,6 +6,7 @@ class Room(models.Model):
   name = models.CharField(max_length=120, unique=True)
   description = models.CharField(max_length=500, blank=True, null=True)
   members = models.ManyToManyField(Student, through='Member')
+  skills = models.CharField(max_length=1000, default="C")
 
   def __str__(self):
         return self.name
