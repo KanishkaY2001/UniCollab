@@ -2,7 +2,7 @@
 <div class="mb-10">
   <div class="mt-10 schedule-title mb-3" style="text-align: center; font-size: 26px">Your Calendar</div>
   <v-row justify="end">
-    <v-btn color="#55CBD3" dark elevation="0" large class="mt-3">
+    <v-btn color="#55CBD3" dark elevation="0" large class="mt-3" @click="sync()">
       Sync
     </v-btn>
   </v-row>
@@ -110,6 +110,9 @@ export default {
         var h = start.getHours()
         var mins = start.getMinutes()
         start = y+'-'+m+'-'+d + ' ' + h +':'+mins
+        if(start[-2] == ":"){
+          start += "0"
+        }
         
         d = end.getDate()
         y = end.getFullYear()
@@ -117,6 +120,10 @@ export default {
         h = end.getHours()
         mins = end.getMinutes()
         end = y+'-'+m+'-'+d + ' ' + h +':'+mins
+
+        if(end[-2] == ":"){
+          end += "0"
+        }
 
         events.push({
           name: e.name,
@@ -137,6 +144,16 @@ export default {
     rndElement (arr) {
       return arr[this.rnd(0, arr.length - 1)]
     },
+    async sync() {
+      try{
+        console.log("here")
+        let res = await this.$axios.$get(`/student/${this.$route.params.id}/sync`)
+        this.userInfo = await this.$axios.$get(`/student/` + params.id);
+        this.getEvents()
+      }catch(e) {
+        console.log(e)
+      }
+    }
   },
 }
 </script>
