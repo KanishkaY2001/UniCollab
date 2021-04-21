@@ -210,7 +210,7 @@
           <v-col cols="6"
           >
             <v-img
-              contain
+              max-height=150
               :src="getGroupImage(g.photo)"
             />
           </v-col>
@@ -260,8 +260,13 @@ export default {
       }
     },
     getGroupImage(url) {
-      var url = url.replace(/^"(.*)"$/, '$1')
-      return "http://127.0.0.1:8000/media/" + url
+      if(url.length > 2){
+        var url = url.replace(/^"(.*)"$/, '$1')
+        return "http://127.0.0.1:8000/media/" + url
+      }else{
+        console.log(this.defPhoto)
+        return this.defPhoto
+      }
     },
     async addCourse(name) {
       try{
@@ -294,7 +299,7 @@ export default {
     pages_2 () {
       return Math.ceil(this.hobbies.length/2)
     },
-    ...mapState(['user']),
+    ...mapState(['user', "defPhoto"]),
     getUserPhoto() {
       return "http://localhost:8000" + this.user.photo
     },

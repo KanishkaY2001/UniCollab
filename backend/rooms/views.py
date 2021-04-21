@@ -1,7 +1,5 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-import json
-
 from students.serializers import StudentSerializer
 from groups.serializers import CalendarSerializer
 

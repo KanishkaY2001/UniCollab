@@ -35,9 +35,42 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-btn class="mt-6 ml-4" color="#55CBD3" dark>
-        create Group
-      </v-btn>
+      <v-dialog
+        v-model="dialog"
+        width="500"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn class="mt-6 ml-4" color="#55CBD3" dark
+            v-on="on"
+            v-bind="attrs"
+          >
+            create Group
+          </v-btn>
+        </template>
+  
+        <v-card class="pa-3">
+          <v-card-title class="headline grey lighten-2">
+            Create a group
+          </v-card-title>
+          <v-text-field
+            class="mt-3"
+            v-model="groupName"
+            outlined
+            label="Group name"
+          />
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="primary"
+              text
+              @click="dialog = false; createGroup()"
+            >
+              Create
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
   </div>
   <div class="mt-10">
@@ -76,11 +109,13 @@ export default {
   },
   data() {
     return {
+      dialog: false,
       filter: false,
       filter_type: ['Overall Match', 'Timetable', 'Location', 'Skillset'],
       findGroupText: "Find a group by scrolling through the list below, or filtering your search using the search bar filter tool",
       roomId: this.$route.params.id,
       groupIntro: "Groups with proposed meeting times that match your calendar commitments will be displayed green, if you are are partially available for a groups proposed meeting times, the group will be displayed yellow. Incompatible groups will be listed as red. You may click a box to see more information about the group.",
+      groupName: ""
     }
   },
   computed: {
@@ -88,6 +123,21 @@ export default {
       return "http://localhost:8000" + this.user.photo
     },
     ...mapState(['user'])
+  },
+  methods: {
+    async createGroup() {
+      try {
+        let res = await this.$axios.$get(`rooms/${this.user.id}/${this.room.id}/creategroup/${this.groupName}`)
+        console.log(res)
+        if(res.id){
+          this.$router.push(`/group/${res.id}`)
+        }else{
+          alert("Fail")
+        }
+      }catch(e) {
+        console.log(e)
+      }
+    }
   }
 }
 
