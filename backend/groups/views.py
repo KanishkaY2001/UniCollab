@@ -77,7 +77,7 @@ def getGroupJson(group):
     # endTime = group.preferredmeetingEndTime.strftime("%Y-%m-%d %H:%M")
     id = group.id
     members = getMember(id)
-    # skills = getSkills(id)
+    skills = getSkills(group.skills)
     vacancy = group.capacity - len(members) - 1
     events = getCalendar(id)
     result = {
@@ -89,7 +89,7 @@ def getGroupJson(group):
       'descript': group.description,
       'location': group.preferredmeetingLoc,
       'photo': photo,
-      'skills': group.skills,
+      'skills': skills,
       'capacity': group.capacity,
       'vacancy': vacancy,
       'events': events
@@ -109,12 +109,9 @@ def getMember(id):
       members.append(info)
   return members
  
-# def getSkills(id):
-#   skills = []
-#   for gk in GroupSkill.objects.all():
-#     if(gk.group.id == id):
-#       skills.append(gk.skill.name)
-#   return skills
+def getSkills(skills):
+  skills = skills.split(",")
+  return skills
 
 def getCalendar(id):
   events = []
