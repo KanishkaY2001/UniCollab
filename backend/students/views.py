@@ -8,7 +8,7 @@ from groups.models.groups import Group
 from groups.models.groupMembers import GroupMember
 from courses.models import Course
 from courses.serializers import CourseSerializer
-from get_event import main
+from sync_calendar import main
 
 import json
 # Create your views here.
