@@ -13,7 +13,7 @@
     <v-row class="group-info" cols="12" justify="center">
       <v-col cols="10">
         <v-row>
-          <v-img contain class="ml-4 mt-7" style="max-width: 120px" :src="getImageURL()"/>
+          <v-img class="ml-3 mt-7" style="width: 170px; height: 115px" :src="getImageURL()"/>
           <v-col cols="7" class="pt-8 ml-7">
             <div style="background-color: white; border-radius: 10px; height: 100px" class="pl-4 pt-2">
               <div style="color: #55CBD3; font-size: 20px">About us</div>
@@ -226,7 +226,12 @@ export default {
     },
     getImageURL() {
       var url = this.group.photo.replace(/^"(.*)"$/, '$1')
-      return "http://127.0.0.1:8000/media/" + url
+      if(url.length > 2){
+        var url = url.replace(/^"(.*)"$/, '$1')
+        return "http://127.0.0.1:8000/media/" + url
+      }else{
+        return "/img/spaceman.png"
+      }
     },
     getPhoto(path) {
       return "http://localhost:8000" + path
