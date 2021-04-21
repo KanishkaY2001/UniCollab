@@ -80,9 +80,9 @@ def syncCalendar(request, id):
     events = main()
     for event in events:
         studEvent = Event.objects.create(
-            name=event["name"],
-            start=event["start"],
-            end=event["end"]
+            name=event['name'],
+            start=event['start'],
+            end=event['end']
         )
         student.calendar.add(studEvent)
         calendarRet.append(EventSerializer(studEvent).data)

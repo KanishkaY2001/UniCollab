@@ -119,10 +119,10 @@ def main():
                         # find event append to event array
                         if (event_end_time_time_format >= start_datetime):
                             event_array.append({
-                                "event name":  event['summary'],
+                                "name":  event['summary'],
                                 "event id": event['id'],
-                                "start time": str(start_time),
-                                "finish time": str(end_time),
+                                "start": str(start_time),
+                                "end": str(end_time),
                                 "recurrence": "weekly event",
                             })
 
@@ -138,10 +138,10 @@ def main():
                 # check event still going after our search time    
                 if (event_end_time >= start_datetime):
                     event_array.append({
-                        "event name":  event['summary'],
+                        "name":  event['summary'],
                         "event id": event['id'],
-                        "start time": event['start']['dateTime'],
-                        "finish time": event['end']['dateTime'],
+                        "start": event['start']['dateTime'],
+                        "end": event['end']['dateTime'],
                         "recurrence": "one time event"
                     })
 
