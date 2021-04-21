@@ -3,7 +3,7 @@
   <v-row cols="13" class="mt-10 mb-5" justify="space-between">
     <v-col cols="2">
       <v-row justify="center">
-        <v-img contain class="logo1" src="/img/logo.svg"/>
+        <v-img contain class="logo1" src="/img/logo.svg" @click="goToUserPage()"/>
       </v-row>
     </v-col>
     <v-col cols="8" align-self="center">
@@ -38,6 +38,9 @@ export default {
   methods: {
     goToProfile() {
       this.$router.push(`/profile/${this.user.id}`)
+    },
+    goToUserPage() {
+      this.$router.push(`/user/${this.user.id}`)
     }
   }
 }

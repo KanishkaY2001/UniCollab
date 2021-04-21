@@ -150,6 +150,15 @@ export default {
         }catch(e){
           console.log(e)
         }
+      }else if(item == "Timetable") {
+        try{
+          // '<int:id>/location/<int:rid>'
+          let res = await this.$axios.$get(`rooms/${this.user.id}/calendar/${this.room.id}`)
+          console.log(res)
+          this.groups = res
+        }catch(e){
+          console.log(e)
+        }
       }
     }
   }
