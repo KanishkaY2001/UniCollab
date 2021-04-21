@@ -10,5 +10,7 @@ urlpatterns = [
     path('<int:id>/joinroom/<int:rid>', joinRoom),
     path('register/<str:name>/<str:email>/<str:password>', register),
     path('login/<str:email>/<str:password>', login),
-    path('<int:id>/addcourse/<str:cname>', addCourse)
+    path('<int:id>/addcourse/<str:cname>', addCourse),
+    path('<int:id>/location/<str:loc>', addLocation),
+    path('<int:id>/sync', syncCalendar)
 ]
