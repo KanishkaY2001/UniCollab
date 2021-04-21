@@ -1,18 +1,18 @@
 <template>
-<div>
+<div class="mb-10">
   <dashboard :title="user.name" :photo="getUserPhoto"></dashboard>
   <div style="background-color: #D2F3F5">
     <v-row justify="space-between">
       <img class="back-icon ml-3" src="/img/back.svg" @click="$router.back()">
       <img class="back-icon mr-3" src="/img/bell.svg">
     </v-row>
-    <v-row class="ma-0 pb-5" align="center" justify="space-between">
+    <v-row class="ma-0 pb-5" align="center" justify="center">
       <v-btn 
         dark
         large
         elevation="0"
         color="#55CBD3"
-        class="ml-10"
+        class="mr-10"
       >Edit Profile</v-btn>
       <v-avatar
         size="200">
@@ -25,7 +25,7 @@
         large
         elevation="0"
         color="#55CBD3"
-        class="mr-10"
+        class="ml-10"
         @click="goToCalendar()"
       >Calendar</v-btn>
     </v-row>
