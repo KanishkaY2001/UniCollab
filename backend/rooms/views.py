@@ -145,5 +145,20 @@ def getCalendarGroups(request, id, rid):
   sortedGroups = sortGroupByAvailabilities(groups, student)
   return JsonResponse(sortedGroups, safe=False)
   
+def getRoomMembers(request, id, rid):
+  members = []
+  room = Room.objects.get(id=rid)
+  for member in room.members.all():
+    if (checkGroupMember(member, room) and member.id != id):
+      members.append(StudentSerializer(member).data)
+  return JsonResponse(members, safe=False)
+          
 
-
+def checkGroupMember(member, room):
+  for memb in GroupMember.objects.all():
+    if (memb.member == member and memb.group.room == room):
+      return False
+  for group in Group.objects.all():
+    if (group.room == room and group.owner == member):
+      return False
+  return True
