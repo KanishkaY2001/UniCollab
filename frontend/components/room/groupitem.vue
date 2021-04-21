@@ -1,7 +1,7 @@
 <template>
   <v-row cols="12" class="mt-3" v-bind:class="{frame0: zero, frame1: one, frame2: two}">
     <v-col cols="2" align-self="center">
-      <v-img contain src="/img/spaceman.png"/>
+      <v-img  :src="getGroupImage(group.photo)"/>
     </v-col>
     <v-col cols="3" align-self="center">
         <div class="group-title mt-2"
