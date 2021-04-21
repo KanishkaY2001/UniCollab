@@ -234,27 +234,33 @@ export default {
     getEvents ({ start, end }) {
       const events = []
 
-      const min = new Date(`${start.date}T00:00:00`)
-      const max = new Date(`${end.date}T23:59:59`)
-      const days = (max.getTime() - min.getTime()) / 86400000
-      const eventCount = this.rnd(days, days + 20)
+      Array.from(this.group.events).forEach( e => {
+        start = new Date(e.start)
+        end = new Date(e.end)
 
-      for (let i = 0; i < eventCount; i++) {
-        const allDay = this.rnd(0, 3) === 0
-        const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-        const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-        const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-        const second = new Date(first.getTime() + secondTimestamp)
+        var d = start.getDate()
+        var y = start.getFullYear()
+        var m = start.getMonth() + 1
+        var h = start.getHours()
+        var mins = start.getMinutes()
+        start = y+'-'+m+'-'+d + ' ' + h +':'+mins+'0'
+        
+        d = end.getDate()
+        y = end.getFullYear()
+        m = end.getMonth() + 1
+        h = end.getHours()
+        mins = end.getMinutes()
+        end = y+'-'+m+'-'+d + ' ' + h +':'+mins+'0'
 
         events.push({
-          name: this.names[this.rnd(0, this.names.length - 1)],
-          start: first,
-          end: second,
+          name: e.eventName,
+          start: start,
+          end: end,
           color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay,
         })
-      }
+      })
       this.events = events
+      console.log(this.events)
     },
     getEventColor (event) {
       return event.color
