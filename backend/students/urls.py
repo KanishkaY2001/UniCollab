@@ -9,5 +9,6 @@ urlpatterns = [
     path('<int:id>/groups', studentGroups),
     path('<int:id>/joinroom/<int:rid>', joinRoom),
     path('register/<str:name>/<str:email>/<str:password>', register),
-    path('login/<str:email>/<str:password>', login)
+    path('login/<str:email>/<str:password>', login),
+    path('<int:id>/course/<str:cname>', addCourse)
 ]
