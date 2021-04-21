@@ -80,6 +80,7 @@ def getGroupJson(group):
     vacancy = group.capacity - len(members) - 1
     events = getCalendar(id)
     result = {
+      'id': group.id,
       'name': group.name, 
       'room': group.room.name,
       'owner': StudentSerializer(group.owner).data,

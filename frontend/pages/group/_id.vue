@@ -87,6 +87,7 @@
             v-bind:key="mem.id"
           >
             <v-avatar
+              @click="$router.push(`/profile/${mem.id}`)"
               class="mt-2"
               size="40">
               <img

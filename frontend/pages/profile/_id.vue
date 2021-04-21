@@ -7,20 +7,32 @@
       <img class="back-icon mr-3" src="/img/bell.svg">
     </v-row>
     <v-row class="ma-0 pb-5" align="center" justify="center">
-      <v-btn 
+      <v-btn
+        v-if="setting==false && userInfo.id == user.id"
         dark
         large
         elevation="0"
         color="#55CBD3"
         class="mr-10"
+        @click="setting = !setting"
       >Edit Profile</v-btn>
+      <v-btn
+        v-else-if="userInfo.id == user.id"
+        dark
+        large
+        elevation="0"
+        color="#55CBD3"
+        class="mr-10"
+        @click="setting = !setting"
+      >Save</v-btn>
       <v-avatar
         size="200">
         <img
           :src="getUserInfoPhoto"
         >
       </v-avatar>
-      <v-btn 
+      <v-btn
+        v-if="userInfo.id == user.id"
         dark
         large
         elevation="0"
@@ -46,7 +58,54 @@
   </v-col>
   <v-row cols="12" class="mt-5">
     <v-col cols="6" style="background-color: #A1EEF4">
-      <div class="subtitle mt-4">Completed Courses</div>
+      <v-row justify="center" class="mb-3">
+        <div class="subtitle mt-7">Completed Courses</div>
+        <v-dialog
+          v-model="dialog"
+          width="500"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-if="setting==true && userInfo.id == user.id"
+              v-on="on"
+              v-bind="attrs"
+              class="ml-3 mt-7"
+              outlined
+              icon
+            >
+              <v-icon>
+                mdi-plus
+              </v-icon>
+            </v-btn>
+          </template>
+    
+          <v-card>
+            <v-card-title class="headline grey lighten-2">
+              Add Course
+            </v-card-title>
+    
+            <v-card-text>
+              <v-text-field
+                v-model="newCourse"
+              >
+              </v-text-field>
+            </v-card-text>
+    
+            <v-divider></v-divider>
+    
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                text
+                @click="dialog = false; addCourse(newCourse)"
+              >
+                ADD
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
       <v-sheet
         style="background-color: #A1EEF4"
         class="mx-auto mb-10 pl-6"
@@ -66,9 +125,15 @@
             <div class="mb-10">
               <div
                 class="course-tag ma-2 pl-6 pr-6 pt-2 pb-2"
-                v-for="course in userInfo.courses.slice((index-1)*4, index*4)"
+                v-for="course in getCourse.slice((index-1)*4, index*4)"
                 :key="course.id"
               >{{course.name}}
+                <v-icon
+                  class="pb-1"
+                  v-if="setting==true"
+                >
+                  mdi-close
+                </v-icon>
               </div>
             </div>
           </v-slide-item>
@@ -136,31 +201,35 @@ export default {
   },
   data(){
     return{
+      newCourse: null,
+      dialog: false,
       cols: 2,
       model: null,
-      courses: [
-        {id: 1, name: 'COMP1511'},
-        {id: 2, name: 'COMP1512'},
-        {id: 3, name: 'COMP1513'},
-        {id: 4, name: 'COMP1514'},
-        {id: 5, name: 'COMP1515'},
-        {id: 6, name: 'COMP1516'},
-        {id: 7, name: 'COMP1517'},
-        {id: 8, name: 'COMP1520'},
-        {id: 9, name: 'COMP1522'},
-        {id: 10, name: 'COMP1533'},
-      ],
+      setting: false,
       hobbies: ["play", "sleep", "being lazy", "play", "sleep"]
     }
   },
   methods:{
-    getUserPhoto(url) {
-      return "http://localhost:8000" + url
-    },
     goToCalendar() {
       if(this.userInfo.id == this.user.id) {
         this.$router.push(`/profile/calendar/${this.userInfo.id}`)
       }
+    },
+    async addCourse(name) {
+      try{
+        let res = await this.$axios.$get(`student/${this.user.id}/addcourse/${name}`)
+        if (res.name == undefined) {
+          alert("Course does not exist")
+        }else{
+          try{
+            this.userInfo = await this.$axios.$get(`/student/` + this.user.id);
+          }catch(e) {
+            console.log(e)
+          }
+        }
+      }catch(e) {
+        console.log(e)
+      } 
     }
   },
   computed: {
@@ -178,9 +247,11 @@ export default {
       console.log( "http://localhost:8000" + this.userInfo.photo)
       return "http://localhost:8000" + this.userInfo.photo
     },
+    getCourse() {
+      return this.userInfo.courses
+    }
   },
   mounted() {
-    // this.getUserPhoto()
   }
 }
 </script>
@@ -202,10 +273,10 @@ export default {
   color: #55CBD3;
 }
 .course-tag{
-  font-size: 18px;
+  font-size: 17px;
   background-color: white;
   text-align: center;
-  width: 148px;
+  width: 144px;
 }
 .hobbies-tag{
   font-size: 18px;

@@ -63,6 +63,16 @@ import groupitem from "@/components/room/groupitem"
 
 export default {
   components: { dashboard, groupitem },
+  async asyncData({ $axios, params }) {
+    try {
+      let groups = await $axios.$get(`/rooms/${params.id}/groups`)
+      return { groups }
+    }catch(e){
+      console.log(e)
+      return { groups: {} };
+    }
+    
+  },
   data() {
     return {
       filter: false,

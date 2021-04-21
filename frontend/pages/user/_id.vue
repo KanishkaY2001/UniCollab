@@ -91,13 +91,13 @@
                 <v-card
                   class="ma-2"
                   height="120"
-                  width="100"
+                  width="115"
                   color="#D2F3F5"
                   @click="$router.push(`/room/1`)"
                 >
                 <div style="text-align: center; color:#646868" class="mt-2">{{room.name}}</div>
                 <v-btn
-                  class="mt-9 ml-4"
+                  class="mt-9 ml-6"
                   style="position: absolute; bottom: 10%"
                   small
                   dark
@@ -128,13 +128,13 @@
                 <v-card
                   class="ma-2"
                   height="120"
-                  width="100"
+                  width="115"
                   color="#D2F3F5"
                   @click="$router.push(`/group/1`)"
                 >
                 <div style="text-align: center; color:#646868" class="mt-2">{{room.name}}</div>
                 <v-btn
-                  class="mt-9 ml-4"
+                  class="mt-9 ml-6"
                   style="position: absolute; bottom: 10%"
                   small
                   dark
