@@ -8,6 +8,7 @@ from .models.groups import Group
 from groups.models.groupMembers import GroupMember
 from groups.models.groupCalendars import Calendar
 from rooms.models import Room
+from availability import dummyGroups
 
 from students.serializers import StudentSerializer
 from groups.serializers import CalendarSerializer
@@ -122,3 +123,44 @@ def getCalendar(id):
     if event.group.id == id:
       events.append(CalendarSerializer(event).data)
   return events
+
+def addPhoto(request, gid, photo):
+  result = {}
+  group = Group.objects.get(id=gid)
+  group.photo = photo
+  group.save()
+  return JsonResponse(result, safe=False)
+
+def addDes(request, gid, descrip):
+  result = {}
+  group = Group.objects.get(id=gid)
+  group.description = descrip
+  group.save()
+  result = {"description" : group.description}
+  return JsonResponse(result, safe=False)
+
+def addCalendar(request, gid):
+  events = []
+  group = Group.objects.get(id=gid)
+  dummyEvents = dummyGroups[gid-7]
+  for event in dummyEvents["preferredMeetingTimes"]:
+        cal = Calendar.objects.create(
+          group=group,
+          eventName=event["name"],
+          start=event["start"],
+          end=event["end"]
+        )
+        cal.save()
+        events.append(CalendarSerializer(cal).data)
+  return JsonResponse(events, safe=False)
+
+def deleteGroup(request, gid):
+  result = {}
+  group = Group.objects.get(id=gid)
+  for member in GroupMember.objects.all():
+        if (member.group == group):
+              member.delete()
+  group.delete()
+  return JsonResponse(result, safe=False)
+
+

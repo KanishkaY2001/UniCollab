@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from students.serializers import StudentSerializer
 
 from groups.models.groups import Group
+from groups.models.groupMembers import GroupMember
 from .models import Room, Member
 from students.models import Student
 # Create your views here.
@@ -51,4 +52,22 @@ def getStudent(id):
     if (student.id == id):
       return student
   return None
-        
+
+def createGroup(request, id, rid, name):
+  groupRet = {}
+  student = Student.objects.get(id=id)
+  room = Room.objects.get(id=rid)
+  group = Group.objects.create(
+    room=room,
+    owner=student,
+    name=name,
+    preferredmeetingLoc=student.location
+  )
+  GroupMember.objects.create(
+    group=group,
+    member=student,
+    status=True
+  )
+  group.save()
+  groupRet = { "id" : group.id }
+  return JsonResponse(groupRet, safe=False)
