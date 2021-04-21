@@ -157,6 +157,9 @@ def leaveRoom(request, id, rid):
     room = Room.objects.get(id=rid)
     room.members.remove(student)
     room.save()
+    for grpMemb in GroupMember.objects.all():
+        if grpMemb.member == student:
+            grpMemb.delete()
     return JsonResponse(result, safe=False)
 
 def deleteCourse(request, id, cname):
