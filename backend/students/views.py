@@ -103,13 +103,23 @@ def studentGroups(request, id):
     groups = []
     for grMemb in GroupMember.objects.all():
         photo = json.dumps(str(grMemb.group.photo))
-        if (grMemb.member.id == id or grMemb.group.owner.id == id):
+        if (grMemb.member.id == id):
             groups.append({
                 "name": grMemb.group.name,
                 "id": grMemb.group.id,
                 "photo": photo,
                 'descript': grMemb.group.description,
                 "room":  grMemb.group.room.name
+            })
+    for group in Group.objects.all():
+        photo = json.dumps(str(group.photo))
+        if (group.owner.id == id):
+            groups.append({
+                "name": group.name,
+                "id": group.id,
+                "photo": photo,
+                'descript': group.description,
+                "room":  group.room.name
             })
     return JsonResponse(groups, safe=False)
 
