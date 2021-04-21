@@ -14,6 +14,7 @@
     <v-col cols="2" align-self="center">
       <v-row justify="end">
         <v-avatar
+          @click="goToProfile()"
           class="mr-4"
           size="73">
           <img
@@ -27,8 +28,18 @@
 </template>
 
 <script>
+import { mapState } from "vuex"
+
 export default {
   props: ["title", "photo"],
+  computed: {
+    ...mapState(['user'])
+  },
+  methods: {
+    goToProfile() {
+      this.$router.push(`/profile/${this.user.id}`)
+    }
+  }
 }
 </script>
 

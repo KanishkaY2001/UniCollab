@@ -27,10 +27,11 @@ def user(request, id=id):
     return JsonResponse(user, safe=False)
 
 def getUserJson(student):
-    photo = json.dumps(str(student.photo))
+    photo = StudentSerializer(student).data['photo']
     events = getCalendar(student)
     courses = getCourses(student)
     result = {
+        "id": student.id,
         "name": student.name,
         "bio": student.bio,
         "location": student.location,

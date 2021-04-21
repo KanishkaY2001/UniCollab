@@ -188,6 +188,12 @@ export default {
       roomName: "Room: SENG2021 PROJECTS",
       groupName: "Attack on HD",
       description: "We are passionate, enthusiastic, with highly capable coding abilties to ATTACK that HD with full force! Join us if u wanna work hard :)",
+      permission:  {
+        'inGroup': false,
+        'isMember': false,
+        'isOwner': false,
+      },
+
       type: 'week',
       types: ['month', 'week', 'day', '4day'],
       // types: ['month', 'week', 'day', '4day'],
@@ -204,11 +210,6 @@ export default {
       events: [],
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
-      permission:  {
-        'inGroup': false,
-        'isMember': false,
-        'isOwner': false,
-      }
     }
   },
   computed: {
@@ -221,6 +222,13 @@ export default {
     getUserPhoto() {
       console.log("http://localhost:8000" + this.user.photo)
       return "http://localhost:8000" + this.user.photo
+    },
+    getImageURL() {
+      var url = this.group.photo.replace(/^"(.*)"$/, '$1')
+      return "http://127.0.0.1:8000/media/" + url
+    },
+    getPhoto(path) {
+      return "http://localhost:8000" + path
     },
     getEvents ({ start, end }) {
       const events = []
@@ -245,15 +253,7 @@ export default {
           timed: !allDay,
         })
       }
-
       this.events = events
-    },
-    getImageURL() {
-      var url = this.group.photo.replace(/^"(.*)"$/, '$1')
-      return "http://127.0.0.1:8000/media/" + url
-    },
-    getPhoto(path) {
-      return "http://localhost:8000" + path
     },
     getEventColor (event) {
       return event.color
