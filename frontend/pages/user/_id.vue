@@ -101,6 +101,7 @@
                   style="position: absolute; bottom: 10%"
                   small
                   dark
+                  @click="leaveRoom(room.id)"
                   color="#55CBD3">LEAVE
                 </v-btn>
                 </v-card>
@@ -163,16 +164,6 @@ export default {
   computed: {
     ...mapState(["user"]),
   },
-
-  // async asyncData({ $axios, params }) {
-  //   try {
-  //     let rooms = await $axios.$get(`/rooms/`);
-  //     let myRooms = await $axios.$get(`${this.user.id}/rooms`);
-  //     return { rooms, myRooms }
-  //   } catch (e) {
-  //     return { group: {} };
-  //   }
-  // },
   async mounted() {
     try {
       this.rooms = await this.$axios.$get(`/rooms/`);
@@ -204,6 +195,14 @@ export default {
       try {
         let res = this.$axios.$get(`student/${this.user.id}/joinroom/${rid}`)
         alert('JOIN')
+      }catch(e) {
+        console.log(e)
+      }
+    },
+    leaveRoom(rid) {
+      try {
+        let res = this.$axios.$get(`student/${this.user.id}/leaveroom/${rid}`)
+        alert('LEAVE')
       }catch(e) {
         console.log(e)
       }

@@ -197,6 +197,29 @@
     </v-col>
     <v-col cols="6" style="background-color: #D2F3F5">
       <div class="subtitle mt-4">Active Groups</div>
+      <div
+        class="mt-5"
+        v-for="g in myGroups"
+        v-bind:key="g.id"
+      >
+        <v-row cols="12"
+          style="background-color: #5BD1D9"
+          class="ml-2 mr-2"
+          @click="$router.push(`/group/${g.id}`)"
+        >
+          <v-col cols="6"
+          >
+            <v-img
+              contain
+              :src="getGroupImage(g.photo)"
+            />
+          </v-col>
+          <v-col align-self="center">
+            <h3>{{g.room}}: {{g.name}}</h3>
+            <p>{{g.descript}}</p>
+          </v-col>
+        </v-row>
+      </div>
     </v-col>
   </v-row>
 </div>
@@ -213,8 +236,9 @@ export default {
   async asyncData({ $axios, params }) {
     try {
       let userInfo = await $axios.$get(`/student/` + params.id);
-      console.log(userInfo)
-      return { userInfo };
+      let myGroups = await $axios.$get(`student/${params.id}/groups`);
+      console.log(myGroups)
+      return { userInfo, myGroups };
     } catch (e) {
       return { userInfo: {} };
     }
@@ -234,6 +258,10 @@ export default {
       if(this.userInfo.id == this.user.id) {
         this.$router.push(`/profile/calendar/${this.userInfo.id}`)
       }
+    },
+    getGroupImage(url) {
+      var url = url.replace(/^"(.*)"$/, '$1')
+      return "http://127.0.0.1:8000/media/" + url
     },
     async addCourse(name) {
       try{
