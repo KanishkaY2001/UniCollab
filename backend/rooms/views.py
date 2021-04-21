@@ -13,6 +13,8 @@ from students.models import Student
 from meeting import sortGroupByDistance
 from groups.models.groupCalendars import Calendar
 from availability import sortGroupByAvailabilities
+from matched_skills import lookingfor
+
 # Create your views here.
 def index(request, id=id):
   rooms = []
@@ -145,5 +147,32 @@ def getCalendarGroups(request, id, rid):
   sortedGroups = sortGroupByAvailabilities(groups, student)
   return JsonResponse(sortedGroups, safe=False)
   
+def getRoomMembers(request, id, rid):
+  members = []
+  room = Room.objects.get(id=rid)
+  for member in room.members.all():
+    if (checkGroupMember(member, room) and member.id != id):
+      members.append(StudentSerializer(member).data)
+  return JsonResponse(members, safe=False)
+          
 
+def checkGroupMember(member, room):
+  for memb in GroupMember.objects.all():
+    if (memb.member == member and memb.group.room == room):
+      return False
+  for group in Group.objects.all():
+    if (group.room == room and group.owner == member):
+      return False
+  return True
 
+def getMatchedSkills(requst, id, gid):
+  group = Group.objects.get(id=gid)
+  skills = group.skills.split(",")
+  print(skills)
+  courses=[]
+  student = Student.objects.get(id=id)
+  for course in student.courses.all():
+    courses.append(course.name)
+  print(courses)
+  matchedskills = lookingfor(skills, courses)
+  return JsonResponse(matchedskills, safe=False)
