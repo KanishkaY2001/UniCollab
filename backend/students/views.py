@@ -2,12 +2,13 @@ from django.shortcuts import render
 from django.http import JsonResponse
 
 from .serializers import StudentSerializer, EventSerializer
-from .models import Student
+from .models import Student, Event
 from rooms.models import Room, Member
 from groups.models.groups import Group
 from groups.models.groupMembers import GroupMember
 from courses.models import Course
 from courses.serializers import CourseSerializer
+from get_event import main
 
 import json
 # Create your views here.
@@ -27,10 +28,11 @@ def user(request, id=id):
     return JsonResponse(user, safe=False)
 
 def getUserJson(student):
-    photo = json.dumps(str(student.photo))
+    photo = StudentSerializer(student).data['photo']
     events = getCalendar(student)
     courses = getCourses(student)
     result = {
+        "id": student.id,
         "name": student.name,
         "bio": student.bio,
         "location": student.location,
@@ -59,10 +61,33 @@ def addCourse(request, id, cname):
         if (course.name == cname):
             student.courses.add(course)
             coursedata = CourseSerializer(course).data
+            student.save()
             return JsonResponse(coursedata, safe=False)
     ## ADD IN HERE FOR NEW COURSE CREATION ##
     print(cname)
     return JsonResponse(coursedata, safe=False)
+
+def addLocation(request, id, loc):
+    student = getStudent(id)
+    student.location = loc
+    student.save()
+    result = { "location" : student.location }
+    return JsonResponse(result, safe=False)
+
+def syncCalendar(request, id):
+    student = getStudent(id)
+    calendarRet = []
+    events = main()
+    for event in events:
+        studEvent = Event.objects.create(
+            name=event["name"],
+            start=event["start"],
+            end=event["end"]
+        )
+        student.calendar.add(studEvent)
+        calendarRet.append(EventSerializer(studEvent).data)
+        student.save()
+    return JsonResponse(calendarRet, safe=False)
 
 def studentRooms(request, id):
     rooms = []

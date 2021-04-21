@@ -1,43 +1,50 @@
 <template>
-<div>
-  <dashboard :title="user.name"></dashboard>
+<div class="mb-10">
+  <dashboard :title="user.name" :photo="getUserPhoto"></dashboard>
   <div style="background-color: #D2F3F5">
     <v-row justify="space-between">
       <img class="back-icon ml-3" src="/img/back.svg" @click="$router.back()">
       <img class="back-icon mr-3" src="/img/bell.svg">
     </v-row>
-    <v-row class="ma-0 pb-5" align="center" justify="space-between">
-      <v-btn 
-        dark
-        large
-        elevation="0"
-        color="#55CBD3"
-        class="ml-10"
-      >Edit Profile</v-btn>
-      <v-avatar
-        color="#55CBD3"
-        size="200">
-      </v-avatar>
+    <v-row class="ma-0 pb-5" align="center" justify="center">
       <v-btn 
         dark
         large
         elevation="0"
         color="#55CBD3"
         class="mr-10"
+      >Edit Profile</v-btn>
+      <v-avatar
+        size="200">
+        <img
+          :src="getUserInfoPhoto"
+        >
+      </v-avatar>
+      <v-btn 
+        dark
+        large
+        elevation="0"
+        color="#55CBD3"
+        class="ml-10"
+        @click="goToCalendar()"
       >Calendar</v-btn>
     </v-row>
   </div>
-  <v-row justify="center" class="mt-6">
-    <h3 style="text-align:center">Bio</h3>
-    <div class="descri">{{user.description}}</div>
-    <v-row justify="center" class="mt-5">
+  <v-col justify="center" class="mt-6">
+    <v-row justify="center">
+      <h3 style="text-align:center">Bio</h3>
+    </v-row>
+    <v-row justify="center">
+      <div class="descri">{{userInfo.bio}}</div>
+    </v-row>
+    <v-row justify="center" class="mt-6">
       <v-icon class="material-icons">
         mdi-lock
       </v-icon>
       <div class="lock-text ml-3">Preferred Meeting Location</div>
     </v-row>
-  </v-row>
-  <v-row cols="12" class="mt-10">
+  </v-col>
+  <v-row cols="12" class="mt-5">
     <v-col cols="6" style="background-color: #A1EEF4">
       <div class="subtitle mt-4">Completed Courses</div>
       <v-sheet
@@ -59,7 +66,7 @@
             <div class="mb-10">
               <div
                 class="course-tag ma-2 pl-6 pr-6 pt-2 pb-2"
-                v-for="course in user.courses.slice((index-1)*4, index*4)"
+                v-for="course in userInfo.courses.slice((index-1)*4, index*4)"
                 :key="course.id"
               >{{course.name}}
               </div>
@@ -86,7 +93,7 @@
             <div class="mb-10" v-if="pages_2 > 2">
               <div
                 class="hobbies-tag ma-2 pl-6 pr-6 pt-2 pb-2"
-                v-for="hobbie in user.hobbies.slice((index-1)*2, index*2)"
+                v-for="hobbie in hobbies.slice((index-1)*2, index*2)"
                 :key="hobbie"
               >{{hobbie}}
               </div>
@@ -94,7 +101,7 @@
             <div class="mb-10 ml-10" v-else>
               <div
                 class="hobbies-tag ma-2 pl-6 pr-6 pt-2 pb-2"
-                v-for="hobbie in user.hobbies.slice((index-1)*2, index*2)"
+                v-for="hobbie in hobbies.slice((index-1)*2, index*2)"
                 :key="hobbie"
               >{{hobbie}}
               </div>
@@ -114,43 +121,66 @@
 
 <script>
 import dashboard from '../../components/dashboard'
+import { mapState } from "vuex"
+
 export default {
   components: { dashboard },
+  async asyncData({ $axios, params }) {
+    try {
+      let userInfo = await $axios.$get(`/student/` + params.id);
+      console.log(userInfo)
+      return { userInfo };
+    } catch (e) {
+      return { userInfo: {} };
+    }
+  },
   data(){
     return{
       cols: 2,
       model: null,
-      user:{
-        id: 1,
-        name: "Noah Fence",
-        description: "Hi, my name is Noah and I am currently a second year Computer Science student at UNSW. I like graphic design, accounting and meeting new people!",
-        courses: [
-          {id: 1, name: 'COMP1511'},
-          {id: 2, name: 'COMP1512'},
-          {id: 3, name: 'COMP1513'},
-          {id: 4, name: 'COMP1514'},
-          {id: 5, name: 'COMP1515'},
-          {id: 6, name: 'COMP1516'},
-          {id: 7, name: 'COMP1517'},
-          {id: 8, name: 'COMP1520'},
-          {id: 9, name: 'COMP1522'},
-          {id: 10, name: 'COMP1533'},
-
-        ],
-        hobbies: ["play", "sleep", "being lazy", "play", "sleep"]
+      courses: [
+        {id: 1, name: 'COMP1511'},
+        {id: 2, name: 'COMP1512'},
+        {id: 3, name: 'COMP1513'},
+        {id: 4, name: 'COMP1514'},
+        {id: 5, name: 'COMP1515'},
+        {id: 6, name: 'COMP1516'},
+        {id: 7, name: 'COMP1517'},
+        {id: 8, name: 'COMP1520'},
+        {id: 9, name: 'COMP1522'},
+        {id: 10, name: 'COMP1533'},
+      ],
+      hobbies: ["play", "sleep", "being lazy", "play", "sleep"]
+    }
+  },
+  methods:{
+    getUserPhoto(url) {
+      return "http://localhost:8000" + url
+    },
+    goToCalendar() {
+      if(this.userInfo.id == this.user.id) {
+        this.$router.push(`/profile/calendar/${this.userInfo.id}`)
       }
     }
   },
-  method:{
-
-  },
   computed: {
     pages_4 () {
-      return Math.ceil(this.user.courses.length/4)
+      return Math.ceil(this.userInfo.courses.length/4)
     },
     pages_2 () {
-      return Math.ceil(this.user.hobbies.length/2)
-    }
+      return Math.ceil(this.hobbies.length/2)
+    },
+    ...mapState(['user']),
+    getUserPhoto() {
+      return "http://localhost:8000" + this.user.photo
+    },
+    getUserInfoPhoto() {
+      console.log( "http://localhost:8000" + this.userInfo.photo)
+      return "http://localhost:8000" + this.userInfo.photo
+    },
+  },
+  mounted() {
+    // this.getUserPhoto()
   }
 }
 </script>
