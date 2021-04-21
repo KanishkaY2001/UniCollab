@@ -142,7 +142,7 @@ def addDes(request, gid, descrip):
 def addCalendar(request, gid):
   events = []
   group = Group.objects.get(id=gid)
-  dummyEvents = dummyGroups[gid-7]
+  dummyEvents = dummyGroups[gid-1]
   for event in dummyEvents["preferredMeetingTimes"]:
         cal = Calendar.objects.create(
           group=group,
