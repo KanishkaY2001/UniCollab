@@ -89,6 +89,20 @@ def syncCalendar(request, id):
         student.save()
     return JsonResponse(calendarRet, safe=False)
 
+def getStudentCalendar(request, id):
+    student = getStudent(id)
+    calendar = []
+    for event in student.calendar.all():
+        calendar.append(EventSerializer(event).data)
+    return JsonResponse(calendar, safe=False)
+
+def deleteCalendar(request, id):
+    result = []
+    student = getStudent(id)
+    for event in student.calendar.all():
+        event.delete()
+    return JsonResponse(result, safe=False)
+
 def studentRooms(request, id):
     rooms = []
     for memb in Member.objects.all():
