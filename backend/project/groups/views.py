@@ -74,7 +74,10 @@ def getGroupJson(group):
     # startTime = group.preferredmeetingStartTime.strftime("%Y-%m-%d %H:%M")
     # endTime = group.preferredmeetingEndTime.strftime("%Y-%m-%d %H:%M")
     id = group.id
-    members = getMember(id)
+    members = []
+    members.append(StudentSerializer(group.owner).data)
+    members = getMember(id, members)
+    print(members)
     skills = getSkills(id)
     vacancy = group.capacity - len(members) - 1
     events = getCalendar(id)
@@ -96,8 +99,7 @@ def getGroupJson(group):
 
     return result
 
-def getMember(id):
-  members = []
+def getMember(id, members):
   for groupMem in GroupMember.objects.all():
     if (groupMem.group.id == id and groupMem.status):
       info = StudentSerializer(groupMem.member).data

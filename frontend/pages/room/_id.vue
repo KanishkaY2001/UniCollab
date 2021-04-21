@@ -29,9 +29,11 @@
           <v-list-item
             v-for="(item, index) in filter_type"
             :key="index"
+            @click="sortBy(item)"
             link
           >
-            <v-list-item-title>{{ item }}</v-list-item-title>
+            <v-list-item-title>
+            {{ item }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -136,6 +138,18 @@ export default {
         }
       }catch(e) {
         console.log(e)
+      }
+    },
+    async sortBy(item) {
+      if(item == "Location"){
+        try{
+          // '<int:id>/location/<int:rid>'
+          let res = await this.$axios.$get(`rooms/${this.user.id}/location/${this.room.id}`)
+          console.log(res)
+          this.groups = res
+        }catch(e){
+          console.log(e)
+        }
       }
     }
   }

@@ -95,7 +95,7 @@ def getGroupJson(group):
       'descript': group.description,
       'location' : group.preferredmeetingLoc,
       'photo': photo,
-      'skills': group.skills,
+      'skills': group.skills.split(","),
       'capacity': group.capacity,
       'vacancy': vacancy
     }
