@@ -10,8 +10,8 @@ def sortGroupByAvailabilities(groups, user):
     # Convert the user's calendar to date time objects
     userDateTimes = []
     for event in user['calendar']:
-        date_time_start = datetime.datetime.strptime(event['start'], "%Y-%m-%d %H:%M")
-        date_time_end = datetime.datetime.strptime(event['end'], "%Y-%m-%d %H:%M")
+        date_time_start = datetime.datetime.strptime(event['start'], '%Y-%m-%dT%H:%M:%SZ')
+        date_time_end = datetime.datetime.strptime(event['end'], '%Y-%m-%dT%H:%M:%SZ')
         userDateTimes.append({
             "name": event['name'],
             "start": date_time_start,
@@ -24,8 +24,8 @@ def sortGroupByAvailabilities(groups, user):
         for meeting in group['preferredMeetingTimes']:
             nMeetings += 1
 
-            date_time_start = datetime.datetime.strptime(meeting['start'], "%Y-%m-%d %H:%M")
-            date_time_end = datetime.datetime.strptime(meeting['end'], "%Y-%m-%d %H:%M")
+            date_time_start = datetime.datetime.strptime(meeting['start'], '%Y-%m-%dT%H:%M:%SZ')
+            date_time_end = datetime.datetime.strptime(meeting['end'], '%Y-%m-%dT%H:%M:%SZ')
             
 
             # Check if any of the user's times clash with this
@@ -33,7 +33,7 @@ def sortGroupByAvailabilities(groups, user):
             for time in userDateTimes:
                 if not ((time['start'] < date_time_start and time['end'] <= date_time_start) or (date_time_end <= time['start'])):
                     # They are not free at this time
-                    print(f"You are not available for {group['name']} {meeting['name']} because of {time['name']}")
+                    #print(f"You are not available for {group['name']} {meeting['name']} because of {time['name']}")
                     available = False        
                     break
             
@@ -49,11 +49,9 @@ def sortGroupByAvailabilities(groups, user):
             matchedScore = 2
 
         print(f"You are available for {percentageAvailable} of {group['name']}'s meetings")
-        sortedGroups.append({
-            'id': group['id'],
-            'score': percentageAvailable,
-            'match': matchedScore
-        })
+        group['score'] = percentageAvailable
+        group['match'] = matchedScore
+        sortedGroups.append(group)
 
     # Sort for groups with highest score first
     sortedGroups = sorted(sortedGroups, key=lambda k: k['score'], reverse=True)
@@ -177,4 +175,4 @@ dummyGroups = [
     }
 ]
 
-print(sortGroupByAvailabilities(dummyGroups, user))
+#print(sortGroupByAvailabilities(dummyGroups, user))

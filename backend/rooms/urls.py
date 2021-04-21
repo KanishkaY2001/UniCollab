@@ -8,5 +8,6 @@ urlpatterns = [
   path('<int:id>', getRoomById),
   path('<int:rid>/groups', getGroupByRoom),
   path('<int:id>/<int:rid>/creategroup/<str:name>', createGroup),
-  path('<int:id>/location/<int:rid>', getLocation)
+  path('<int:id>/location/<int:rid>', getLocation),
+  path('<int:id>/calendar/<int:rid>', getCalendarGroups)
 ]
