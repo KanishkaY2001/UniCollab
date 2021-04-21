@@ -16,5 +16,4 @@ urlpatterns = [
     path('<int:id>/location/<str:loc>', addLocation),
     path('<int:id>/sync', syncCalendar),
     path('<int:id>/leave/<int:rid>', leaveRoom)
-
 ]
