@@ -93,7 +93,7 @@
                   height="120"
                   width="115"
                   color="#D2F3F5"
-                  @click="$router.push(`/room/1`)"
+                  @click="$router.push(`/room/${room.id}`)"
                 >
                 <div style="text-align: center; color:#646868" class="mt-2">{{room.name}}</div>
                 <v-btn

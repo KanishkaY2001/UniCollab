@@ -1,6 +1,6 @@
 <template>
 <div class="mb-10">
-  <dashboard :title="user.name" :photo="getUserPhoto"></dashboard>
+  <dashboard :title="userInfo.name" :photo="getUserPhoto"></dashboard>
   <div style="background-color: #D2F3F5">
     <v-row justify="space-between">
       <img class="back-icon ml-3" src="/img/back.svg" @click="$router.back()">
@@ -14,7 +14,7 @@
         elevation="0"
         color="#55CBD3"
         class="mr-10"
-        @click="setting = !setting"
+        @click="setting =!setting"
       >Edit Profile</v-btn>
       <v-btn
         v-else-if="userInfo.id == user.id"
@@ -23,7 +23,7 @@
         elevation="0"
         color="#55CBD3"
         class="mr-10"
-        @click="setting = !setting"
+        @click="setting = !setting; save()"
       >Save</v-btn>
       <v-avatar
         size="200">
@@ -46,10 +46,30 @@
     <v-row justify="center">
       <h3 style="text-align:center">Bio</h3>
     </v-row>
-    <v-row justify="center">
+    <v-row justify="center" v-if="userInfo.id == user.id && setting==true">
+      <v-text-field
+        class="ml-6 mr-6"
+        outlined
+        v-model="userInfo.bio"
+      >
+      </v-text-field>
+    </v-row>
+    <v-row justify="center" v-else>
       <div class="descri">{{userInfo.bio}}</div>
     </v-row>
-    <v-row justify="center" class="mt-6">
+    <v-col justify="center" class="mt-6" v-if="setting==true && userInfo.id == user.id">
+      <v-row justify="center">
+        <div class="lock-text ml-3">Preferred Meeting Location (visible to you only)</div>
+      </v-row>
+      <v-text-field
+        class="mt-5"
+        label="Enter the suburb/postcode of your prefferred meeting location"
+        outlined
+        v-model="userInfo.location"
+      >
+      </v-text-field>
+    </v-col>
+    <v-row justify="center" class="mt-6" v-else>
       <v-icon class="material-icons">
         mdi-lock
       </v-icon>
@@ -230,6 +250,13 @@ export default {
       }catch(e) {
         console.log(e)
       } 
+    },
+    async save() {
+      try{
+        let res = this.$axios.$get(`/student/` + this.user.id + `/location/` + this.userInfo.location)
+      }catch(e) {
+        console.log(e)
+      }
     }
   },
   computed: {
@@ -276,7 +303,7 @@ export default {
   font-size: 17px;
   background-color: white;
   text-align: center;
-  width: 144px;
+  width: 148px;
 }
 .hobbies-tag{
   font-size: 18px;

@@ -1,6 +1,6 @@
 <template>
 <div class="mt-10">
-  <dashboard :title="roomName"></dashboard>
+  <dashboard :title="room.name" :photo="getUserPhoto"></dashboard>
   <div class="intro">
     <v-row cols="12">
       <img class="back-icon" src="/img/back.svg" @click="$router.back()">
@@ -60,18 +60,19 @@
 <script>
 import dashboard from "@/components/dashboard"
 import groupitem from "@/components/room/groupitem"
+import { mapState } from "vuex"
 
 export default {
   components: { dashboard, groupitem },
   async asyncData({ $axios, params }) {
     try {
       let groups = await $axios.$get(`/rooms/${params.id}/groups`)
-      return { groups }
+      let room = await $axios.$get(`/rooms/${params.id}`)
+      return { groups, room }
     }catch(e){
       console.log(e)
       return { groups: {} };
     }
-    
   },
   data() {
     return {
@@ -80,45 +81,13 @@ export default {
       findGroupText: "Find a group by scrolling through the list below, or filtering your search using the search bar filter tool",
       roomId: this.$route.params.id,
       groupIntro: "Groups with proposed meeting times that match your calendar commitments will be displayed green, if you are are partially available for a groups proposed meeting times, the group will be displayed yellow. Incompatible groups will be listed as red. You may click a box to see more information about the group.",
-      groups:[
-        {'id': 1,
-        'name': "SpongBob",
-        'members': ['Aiden'],
-        'skills': ['python', 'Vue', 'Low-Fi Prototyping', 'Django', 'Figma'],
-        'discript': "Find a group by scrolling through the list below, or filtering your search using the search bar filter tool",
-        'match': 2
-        },
-        {'id': 2,
-        'name': "Jelly",
-        'members': ['Aiden', 'Fitan', 'James'],
-        'skills': ['python', 'Vue', 'Django'],
-        'discript': "Find a group by scrolling through the list below, or filtering your search using the search bar filter tool",
-        'match': 2
-        },
-        {'id': 3,
-        'name': "Fish",
-        'members': ['Aiden', 'Fitan', 'James'],
-        'skills': ['Figma', 'Django'],
-        'discript': "Find a group by scrolling through the list below, or filtering your search using the search bar filter tool",
-        'match': 1
-        },
-        {'id': 4,
-        'name': "U never sleep",
-        'members': ['Aiden', 'Fitan', 'James'],
-        'skills': ['Vue', 'Low-Fi Prototyping'],
-        'discript': "Find a group by scrolling through the list below, or filtering your search using the search bar filter tool",
-        'match': 1
-        },
-        {'id': 5,
-        'name': "WOW",
-        'members': ['Aiden', 'Fitan', 'James', 'Tiana'],
-        'skills': ['python'],
-        'discript': "Find a group by scrolling through the list below, or filtering your search using the search bar filter tool",
-        'match': 0
-        },
-      ],
-      roomName: "Room: SENG2021 PROJECTS"
     }
+  },
+  computed: {
+    getUserPhoto() {
+      return "http://localhost:8000" + this.user.photo
+    },
+    ...mapState(['user'])
   }
 }
 
