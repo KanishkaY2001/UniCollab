@@ -167,12 +167,10 @@ def checkGroupMember(member, room):
 
 def getMatchedSkills(requst, id, gid):
   group = Group.objects.get(id=gid)
-  skills = group.skills.split(",")
-  print(skills)
+  skills = group.skills.split(", ")
   courses=[]
   student = Student.objects.get(id=id)
   for course in student.courses.all():
     courses.append(course.name)
-  print(courses)
   matchedskills = lookingfor(skills, courses)
   return JsonResponse(matchedskills, safe=False)
