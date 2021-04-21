@@ -14,5 +14,7 @@ class GroupMember(models.Model):
   )
   status = models.BooleanField(default=False)
 
-  class Meta:
-    unique_together = ['group', 'member']
+  skills = models.CharField(max_length=1000, default="")
+
+  # class Meta:
+  #   unique_together = ['group', 'member']

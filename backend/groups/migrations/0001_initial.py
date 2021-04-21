@@ -48,8 +48,8 @@ class Migration(migrations.Migration):
                 ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='groups.group')),
                 ('member', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='students.student')),
             ],
-            options={
-                'unique_together': {('group', 'member')},
-            },
+            # options={
+            #     'unique_together': {('group', 'member')},
+            # },
         ),
     ]
