@@ -25,12 +25,14 @@ def sortGroupByDistance(groups, user):
         if res['rows'][0]['elements'][0]['status'] == 'OK':
             distance = res['rows'][0]['elements'][0]['distance']['text']
             distance = float(distance.split(' ')[0])
-            nearestGroups.append({
-                "id": group['id'],
-                "name": group['name'],
-                "location": group['location'],
-                "distance": distance
-            })
+            group["distance"] = distance
+            match = 0
+            if (distance < 10):
+                match = 2
+            elif (distance < 30):
+                match = 1
+            group["match"] = match
+            nearestGroups.append(group)
 
     nearestGroups = sorted(nearestGroups, key=lambda k: k['distance'])
 

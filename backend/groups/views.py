@@ -99,16 +99,14 @@ def getGroupJson(group):
 
 def getMember(id):
   members = []
-  for group in Group.objects.all():
-    if group.id == id:
-      info = StudentSerializer(group.owner).data
-      members.append(info)
-    
+  #for group in Group.objects.all():
+  #  if group.id == id:
+  #    info = StudentSerializer(group.owner).data
+  #    members.append(info)
   for groupMem in GroupMember.objects.all():
     if (groupMem.group.id == id and groupMem.status):
       info = StudentSerializer(groupMem.member).data
       members.append(info)
-
   return members
  
 # def getSkills(id):
