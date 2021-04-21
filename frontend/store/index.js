@@ -5,7 +5,7 @@ export const plugins = [createPersistedState()]
 export const state = () =>({
   userId: 0,
   user: "",
-  defPhoto: "/img/spaceman.pg"
+  defPhoto: "/img/spaceman.png"
 })
 
 export const mutations = {

@@ -67,7 +67,15 @@ export default {
     },
     goToGroup() {
       this.$router.push(`/group/${this.group.id}`)
-    }
+    },
+    getGroupImage(url) {
+      if(url.length > 2){
+        var url = url.replace(/^"(.*)"$/, '$1')
+        return "http://127.0.0.1:8000/media/" + url
+      }else{
+        return "/img/spaceman.png"
+      }
+    },
   },
   computed: {
     zero: function(){
