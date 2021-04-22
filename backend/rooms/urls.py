@@ -12,4 +12,5 @@ urlpatterns = [
   path('<int:id>/calendar/<int:rid>', getCalendarGroups),
   path('<int:id>/skills/<int:rid>', getSkillsGroups),
   path('<int:id>/<int:rid>/<int:gid>/members', getRoomMembers),
+  path('<int:id>/overall/<int:rid>', getOverallGroups)
 ]

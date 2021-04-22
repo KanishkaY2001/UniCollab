@@ -27,7 +27,7 @@ def sortOverallGroups(groups, user, user2):
         overallScore[group['id']]['match'] += group['match']
     
     for group in groups:
-        group['match'] = overallScore[group['id']]['match']
+        group['match'] = int(overallScore[group['id']]['match']/3)
         sortedOverall.append(group)
 
     sortedOverall = sorted(sortedOverall, key=lambda k: k['match'], reverse=True)
@@ -204,4 +204,4 @@ groups = [
 ]
 
 
-print(sortOverallGroups(groups, user))
+#print(sortOverallGroups(groups, user))
