@@ -56,6 +56,7 @@
       <v-col cols="8">
         <v-row justify="end" style="background-color:#D2F3F5">
           <v-btn 
+            @click="logout()"
             dark
             color="#55CBD3">
             LOGOUT
@@ -156,7 +157,7 @@
 
 <script>
 import dashboard from '../../components/dashboard.vue'
-import { mapState } from "vuex"
+import { mapState, mapMutations } from "vuex"
 
 export default {
   components: { dashboard },
@@ -183,6 +184,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['LOG_OUT']),
     getUserName() {
       return "welcome " + this.user.name
     },
@@ -198,6 +200,10 @@ export default {
         console.log(e)
       }
     },
+    logout(){
+      this.LOG_OUT()
+      this.$router.push(``)
+    },
     async leaveRoom(rid) {
       try {
         let res = await this.$axios.$get(`student/${this.user.id}/leaveroom/${rid}`)
@@ -208,6 +214,9 @@ export default {
       }
     }
   },
+  // computed: {
+  //   ...mapMutations(['LOG_OUT'])
+  // }
 }
 </script>
 

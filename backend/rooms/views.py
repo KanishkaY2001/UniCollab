@@ -14,6 +14,7 @@ from meeting import sortGroupByDistance
 from groups.models.groupCalendars import Calendar
 from availability import sortGroupByAvailabilities
 from matched_skills import lookingfor
+from skills import sortGroupBySkills
 
 # Create your views here.
 def index(request, id=id):
@@ -100,6 +101,7 @@ def getGroupJson(group):
     members = getMember(id)
     vacancy = group.capacity - len(members)
     calendar = getCalendar(id)
+    wehave = getWeHave(group)
     result = {
       'id': group.id,
       'name': group.name, 
@@ -108,13 +110,27 @@ def getGroupJson(group):
       'location' : group.preferredmeetingLoc,
       'preferredMeetingTimes' : calendar,
       'photo': photo,
-      'skills': group.skills.split(","),
+      'lookingFor': group.skills.split(","),
+      'weHave': wehave,
       'capacity': group.capacity,
       'vacancy': vacancy
     }
-
     return result
   
+def getWeHave(group):
+  skills=""
+  for grpMemb in GroupMember.objects.all():
+    if (grpMemb.group == group):
+      if skills:
+        skills = skills + ", " + grpMemb.skills
+      else :
+        skills = grpMemb.skills
+  if skills:
+    weHaveSkills = skills.split(", ")
+  else: 
+    weHaveSkills = []
+  return weHaveSkills
+
 def getMember(id):
   members = []
   for group in Group.objects.all():
@@ -147,12 +163,19 @@ def getCalendarGroups(request, id, rid):
   sortedGroups = sortGroupByAvailabilities(groups, student)
   return JsonResponse(sortedGroups, safe=False)
   
-def getRoomMembers(request, id, rid):
+def getRoomMembers(request, id, rid, gid):
   members = []
   room = Room.objects.get(id=rid)
   for member in room.members.all():
+    matchedskills = getMatchedSkills(member, gid)
     if (checkGroupMember(member, room) and member.id != id):
-      members.append(StudentSerializer(member).data)
+      members.append({
+        "name" : member.name,
+        "id" : member.id,
+        "bio": member.bio,
+        "photo": json.dumps(str(member.photo)),
+        "skills": matchedskills
+      })
   return JsonResponse(members, safe=False)
           
 
@@ -165,12 +188,20 @@ def checkGroupMember(member, room):
       return False
   return True
 
-def getMatchedSkills(requst, id, gid):
+def getMatchedSkills(student, gid):
   group = Group.objects.get(id=gid)
   skills = group.skills.split(", ")
   courses=[]
-  student = Student.objects.get(id=id)
   for course in student.courses.all():
     courses.append(course.name)
   matchedskills = lookingfor(skills, courses)
-  return JsonResponse(matchedskills, safe=False)
+  return matchedskills
+
+def getSkillsGroups(request, id, rid):
+  groups = []
+  student = Student.objects.get(id=id)
+  for group in Group.objects.all():
+    if group.room.id == rid:
+      groups.append(getGroupJson(group))
+  sortedGroups = sortGroupBySkills(groups, student)
+  return JsonResponse(sortedGroups, safe=False)

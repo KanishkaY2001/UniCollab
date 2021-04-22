@@ -71,7 +71,7 @@
             <p
               class="mr-7"
               style="color: #646868"
-              v-for="skill in group.skills"
+              v-for="skill in group.weHave"
               v-bind:key="skill"
             >{{skill}}</p>
           <!-- </div> -->
@@ -84,7 +84,7 @@
             <p
               class="mr-7"
               style="color: #646868"
-              v-for="skill in group.skills"
+              v-for="skill in group.lookingFor"
               v-bind:key="skill"
             >{{skill}}</p>
           <!-- </div> -->
@@ -179,7 +179,7 @@
 <script>
 import dashboard from "@/components/dashboard"
 import join from "@/components/group/join"
-import { mapState } from "vuex"
+import { mapState, mapMutations } from "vuex"
 
 export default {
   async asyncData({ $axios, params }) {
@@ -232,7 +232,6 @@ export default {
     ...mapMutations(["SAVE_GROUP"]),
     getRoomName() {
       //save group id
-      this.SAVE_GROUP(this.group.id)
       return "Room: " + this.group.room
     },
     getUserPhoto() {
@@ -263,14 +262,21 @@ export default {
         var m = start.getMonth() + 1
         var h = start.getHours()
         var mins = start.getMinutes()
-        start = y+'-'+m+'-'+d + ' ' + h +':'+mins+'0'
+        start = y+'-'+m+'-'+d + ' ' + h +':'+mins
+        if(start[-2] == ":"){
+          start += "0"
+        }
         
         d = end.getDate()
         y = end.getFullYear()
         m = end.getMonth() + 1
         h = end.getHours()
         mins = end.getMinutes()
-        end = y+'-'+m+'-'+d + ' ' + h +':'+mins+'0'
+        end = y+'-'+m+'-'+d + ' ' + h +':'+mins
+
+        if(end[-2] == ":"){
+          end += "0"
+        }
 
         events.push({
           name: e.eventName,
@@ -292,6 +298,7 @@ export default {
       try{
         let permission = await this.$axios.$get(`/group/` + this.$route.params.id + `/user/${this.user.id}/permission`);
         this.permission = permission
+        console.log(permission)
       }catch(e) {
         console.log(e)
       }
@@ -306,6 +313,7 @@ export default {
   },
   async mounted() {
     this.getPermission()
+    this.SAVE_GROUP(this.group.id)
     // try {
     //   let permission = await this.$axios.$get(`/group/${route.params.id}/user/${userId}/permission/`);
     //   this.permission = permission;

@@ -17,7 +17,7 @@
         max-height="100">
         <div> 
           <div
-            v-for="(item, i) in group.skills"
+            v-for="(item, i) in group.lookingFor"
             v-bind:key="i"
             class="list-text ml-1">- {{item}}
           </div>

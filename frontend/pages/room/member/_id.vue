@@ -101,11 +101,9 @@ export default {
   components: { dashboard, memitem },
   async asyncData({ $axios, params, store}) {
     try {
-      let members = await $axios.$get(`/rooms/${store.getters.userId}/${params.id}/members`)
-      // let skills = await $axios.$get(`/rooms/${params.id}/matchedskills/${store.getters.groupId}`)
+      let members = await $axios.$get(`/rooms/${store.getters.userId}/${params.id}/${store.getters.groupId}/members`)
       let room = await $axios.$get(`/rooms/${params.id}`)
-      // console.log(members)
-      // console.log(skills)
+      console.log(members)
       return { members, room }
     }catch(e){
       console.log(e)
@@ -127,7 +125,7 @@ export default {
     getUserPhoto() {
       return "http://localhost:8000" + this.user.photo
     },
-    ...mapState(['user', 'currentGroup'])
+    ...mapState(['user', 'currentGroup']),
   },
   methods: {
     async createGroup() {
@@ -163,7 +161,7 @@ export default {
           console.log(e)
         }
       }
-    }
+    },
   }
 }
 
