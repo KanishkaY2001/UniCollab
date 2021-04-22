@@ -61,7 +61,7 @@
             dark
             color="#55CBD3"
             class="mt-10 ml-2"
-            @click="leaveGroup()"
+            @click="leaveGroup(); $router.back()"
           >LEAVE</v-btn>        
         </v-row>
       </v-col>
@@ -309,15 +309,17 @@ export default {
     },
     async leaveGroup() {
       try {
-        // let res = await this.$axios.$get(``)
+        let res = await this.$axios.$get(`/group/${this.$route.params.id}/leave/${this.user.id}`)
+        console.log(re)
       }catch(e) {
-
+        console.log(e)
       }
     },
     async save() {
       try {
         // <int:gid>/description/<str:descrip>
         let res = await this.$axios.$get(`/group/` + this.$route.params.id + `/description/${this.group.descript}`);
+        alert("Leave Group")
       }catch(e){
         console.log(e)
       }

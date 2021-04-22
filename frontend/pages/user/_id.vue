@@ -202,7 +202,7 @@ export default {
     },
     logout(){
       this.LOG_OUT()
-      this.$router.push(``)
+      this.$router.push(`/`)
     },
     async leaveRoom(rid) {
       try {
