@@ -6,12 +6,14 @@ import json
 from .models.groups import Group
 # from students.models import Student
 from groups.models.groupMembers import GroupMember
-from groups.models.groupSkills import GroupSkill
 from groups.models.groupCalendars import Calendar
 from rooms.models import Room
+from availability import dummyGroups
+from students.models import Student
 
 from students.serializers import StudentSerializer
 from groups.serializers import CalendarSerializer
+from matched_skills import lookingfor
 
 # Create your views here.
 def getGroupById(request, id=id):
@@ -75,11 +77,15 @@ def getGroupJson(group):
     # startTime = group.preferredmeetingStartTime.strftime("%Y-%m-%d %H:%M")
     # endTime = group.preferredmeetingEndTime.strftime("%Y-%m-%d %H:%M")
     id = group.id
-    members = getMember(id)
-    skills = getSkills(id)
+    members = []
+    members.append(StudentSerializer(group.owner).data)
+    members = getMember(id, members)
+    skills = getSkills(group.skills)
+    currentSkills = getWeHave(group)
     vacancy = group.capacity - len(members) - 1
     events = getCalendar(id)
     result = {
+      'id': group.id,
       'name': group.name, 
       'room': group.room.name,
       'owner': StudentSerializer(group.owner).data,
@@ -87,7 +93,8 @@ def getGroupJson(group):
       'descript': group.description,
       'location': group.preferredmeetingLoc,
       'photo': photo,
-      'skills': skills,
+      'lookingFor': skills,
+      'weHave': currentSkills,
       'capacity': group.capacity,
       'vacancy': vacancy,
       'events': events
@@ -95,26 +102,34 @@ def getGroupJson(group):
 
     return result
 
-def getMember(id):
-  members = []
-  for group in Group.objects.all():
-    if group.id == id:
-      info = StudentSerializer(group.owner).data
-      members.append(info)
-    
+def getMember(id, members):
+  #for group in Group.objects.all():
+  #  if group.id == id:
+  #    info = StudentSerializer(group.owner).data
+  #    members.append(info)
   for groupMem in GroupMember.objects.all():
     if (groupMem.group.id == id and groupMem.status):
       info = StudentSerializer(groupMem.member).data
       members.append(info)
-
   return members
  
-def getSkills(id):
-  skills = []
-  for gk in GroupSkill.objects.all():
-    if(gk.group.id == id):
-      skills.append(gk.skill.name)
+def getSkills(skills):
+  skills = skills.split(", ")
   return skills
+
+def getWeHave(group):
+  skills=""
+  for grpMemb in GroupMember.objects.all():
+    if (grpMemb.group == group):
+      if skills:
+        skills = skills + ", " + grpMemb.skills
+      else :
+        skills = grpMemb.skills
+  if skills:
+    weHaveSkills = skills.split(", ")
+  else: 
+    weHaveSkills = []
+  return weHaveSkills
 
 def getCalendar(id):
   events = []
@@ -122,3 +137,74 @@ def getCalendar(id):
     if event.group.id == id:
       events.append(CalendarSerializer(event).data)
   return events
+
+def addPhoto(request, gid, photo):
+  result = {}
+  group = Group.objects.get(id=gid)
+  group.photo = photo
+  group.save()
+  return JsonResponse(result, safe=False)
+
+def addDes(request, gid, descrip):
+  result = {}
+  group = Group.objects.get(id=gid)
+  group.description = descrip
+  group.save()
+  result = {"description" : group.description}
+  return JsonResponse(result, safe=False)
+
+def addCalendar(request, gid):
+  events = []
+  group = Group.objects.get(id=gid)
+  dummyEvents = dummyGroups[gid-1]
+  for event in dummyEvents["preferredMeetingTimes"]:
+        cal = Calendar.objects.create(
+          group=group,
+          eventName=event["name"],
+          start=event["start"],
+          end=event["end"]
+        )
+        cal.save()
+        events.append(CalendarSerializer(cal).data)
+  return JsonResponse(events, safe=False)
+
+def deleteGroup(request, gid):
+  result = {}
+  group = Group.objects.get(id=gid)
+  for member in GroupMember.objects.all():
+        if (member.group == group):
+              member.delete()
+  group.delete()
+  return JsonResponse(result, safe=False)
+
+def joinGroup(request, gid, id):
+  result = {}
+  group = Group.objects.get(id=gid)
+  skills = group.skills.split(", ")
+  student = Student.objects.get(id=id)
+  courses = []
+  for course in student.courses.all():
+    courses.append(course.name)
+  matchedskills = lookingfor(skills, courses)
+  print(matchedskills)
+  group = Group.objects.get(id=gid)
+  grpMemb = GroupMember.objects.create(
+    group=group,
+    member=student,
+    status=True,
+  )
+  if matchedskills:
+    grpMemb.skills=", ".join(matchedskills)
+  grpMemb.save()
+
+  for skill in skills:
+    if skill in matchedskills:
+      skills.remove(skill)
+  group.skills = ", ".join(skills)
+  group.save()
+  return JsonResponse(result, safe=False)
+
+def getRoomId(request, gid):
+  group = Group.objects.get(id=gid)
+  result = { "id": group.room.id }
+  return JsonResponse(result, safe=False)

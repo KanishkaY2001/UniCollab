@@ -1,6 +1,6 @@
 <template>
 <div class="mt-10">
-  <dashboard :title="roomName"></dashboard>
+  <dashboard :title="room.name" :photo="getUserPhoto"></dashboard>
   <div class="intro">
     <v-row cols="12">
       <img class="back-icon" src="/img/back.svg" @click="$router.back()">
@@ -29,15 +29,50 @@
           <v-list-item
             v-for="(item, index) in filter_type"
             :key="index"
+            @click="sortBy(item)"
             link
           >
-            <v-list-item-title>{{ item }}</v-list-item-title>
+            <v-list-item-title>
+            {{ item }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-btn class="mt-6 ml-4" color="#55CBD3" dark>
-        create Group
-      </v-btn>
+      <v-dialog
+        v-model="dialog"
+        width="500"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn class="mt-6 ml-4" color="#55CBD3" dark
+            v-on="on"
+            v-bind="attrs"
+          >
+            create Group
+          </v-btn>
+        </template>
+  
+        <v-card class="pa-3">
+          <v-card-title class="headline grey lighten-2">
+            Create a group
+          </v-card-title>
+          <v-text-field
+            class="mt-3"
+            v-model="groupName"
+            outlined
+            label="Group name"
+          />
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="primary"
+              text
+              @click="dialog = false; createGroup()"
+            >
+              Create
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
   </div>
   <div class="mt-10">
@@ -60,54 +95,71 @@
 <script>
 import dashboard from "@/components/dashboard"
 import groupitem from "@/components/room/groupitem"
+import { mapState } from "vuex"
 
 export default {
   components: { dashboard, groupitem },
+  async asyncData({ $axios, params }) {
+    try {
+      let groups = await $axios.$get(`/rooms/${params.id}/groups`)
+      let room = await $axios.$get(`/rooms/${params.id}`)
+      return { groups, room }
+    }catch(e){
+      console.log(e)
+      return { groups: {} };
+    }
+  },
   data() {
     return {
+      dialog: false,
       filter: false,
       filter_type: ['Overall Match', 'Timetable', 'Location', 'Skillset'],
       findGroupText: "Find a group by scrolling through the list below, or filtering your search using the search bar filter tool",
       roomId: this.$route.params.id,
       groupIntro: "Groups with proposed meeting times that match your calendar commitments will be displayed green, if you are are partially available for a groups proposed meeting times, the group will be displayed yellow. Incompatible groups will be listed as red. You may click a box to see more information about the group.",
-      groups:[
-        {'id': 1,
-        'name': "SpongBob",
-        'members': ['Aiden'],
-        'skills': ['python', 'Vue', 'Low-Fi Prototyping', 'Django', 'Figma'],
-        'discript': "Find a group by scrolling through the list below, or filtering your search using the search bar filter tool",
-        'match': 2
-        },
-        {'id': 2,
-        'name': "Jelly",
-        'members': ['Aiden', 'Fitan', 'James'],
-        'skills': ['python', 'Vue', 'Django'],
-        'discript': "Find a group by scrolling through the list below, or filtering your search using the search bar filter tool",
-        'match': 2
-        },
-        {'id': 3,
-        'name': "Fish",
-        'members': ['Aiden', 'Fitan', 'James'],
-        'skills': ['Figma', 'Django'],
-        'discript': "Find a group by scrolling through the list below, or filtering your search using the search bar filter tool",
-        'match': 1
-        },
-        {'id': 4,
-        'name': "U never sleep",
-        'members': ['Aiden', 'Fitan', 'James'],
-        'skills': ['Vue', 'Low-Fi Prototyping'],
-        'discript': "Find a group by scrolling through the list below, or filtering your search using the search bar filter tool",
-        'match': 1
-        },
-        {'id': 5,
-        'name': "WOW",
-        'members': ['Aiden', 'Fitan', 'James', 'Tiana'],
-        'skills': ['python'],
-        'discript': "Find a group by scrolling through the list below, or filtering your search using the search bar filter tool",
-        'match': 0
-        },
-      ],
-      roomName: "Room: SENG2021 PROJECTS"
+      groupName: ""
+    }
+  },
+  computed: {
+    getUserPhoto() {
+      return "http://localhost:8000" + this.user.photo
+    },
+    ...mapState(['user'])
+  },
+  methods: {
+    async createGroup() {
+      try {
+        let res = await this.$axios.$get(`rooms/${this.user.id}/${this.room.id}/creategroup/${this.groupName}`)
+        console.log(res)
+        if(res.id){
+          this.$router.push(`/group/${res.id}`)
+        }else{
+          alert("Fail")
+        }
+      }catch(e) {
+        console.log(e)
+      }
+    },
+    async sortBy(item) {
+      if(item == "Location"){
+        try{
+          // '<int:id>/location/<int:rid>'
+          let res = await this.$axios.$get(`rooms/${this.user.id}/location/${this.room.id}`)
+          console.log(res)
+          this.groups = res
+        }catch(e){
+          console.log(e)
+        }
+      }else if(item == "Timetable") {
+        try{
+          // '<int:id>/location/<int:rid>'
+          let res = await this.$axios.$get(`rooms/${this.user.id}/calendar/${this.room.id}`)
+          console.log(res)
+          this.groups = res
+        }catch(e){
+          console.log(e)
+        }
+      }
     }
   }
 }

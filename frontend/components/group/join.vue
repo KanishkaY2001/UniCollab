@@ -39,9 +39,14 @@
 
 <script>
 export default {
+  props: ["userId", "groupId"],
   methods: {
-    sendJoinRequest() {
-      console.log("here")
+    async sendJoinRequest() {
+      try{
+        let res = await this.$axios.$get(`group/${this.groupId}/join/${this.userId}`)
+      }catch(e){
+        console.log(e)
+      }
     }
   }
 }

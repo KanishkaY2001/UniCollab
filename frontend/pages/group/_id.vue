@@ -13,7 +13,7 @@
     <v-row class="group-info" cols="12" justify="center">
       <v-col cols="10">
         <v-row>
-          <v-img contain class="ml-4 mt-7" style="max-width: 120px" :src="getImageURL()"/>
+          <v-img class="ml-3 mt-7" style="width: 170px; height: 115px" :src="getImageURL()"/>
           <v-col cols="7" class="pt-8 ml-7">
             <div style="background-color: white; border-radius: 10px; height: 100px" class="pl-4 pt-2">
               <div style="color: #55CBD3; font-size: 20px">About us</div>
@@ -25,6 +25,8 @@
           <!-- <v-btn dark color="#55CBD3" class="mt-10 mr-8">JOIN</v-btn> -->
           <join
             v-if="permission.inGroup==false"
+            :userId="user.id"
+            :groupId="group.id"
           ></join>
           <v-btn
             small
@@ -32,19 +34,30 @@
             dark
             color="#55CBD3"
             class="mt-10 ml-2"
+            @click="joinGroup()"
           >Request Sent</v-btn>
           <v-btn
             small
-            v-else-if="permission.isOwner==true"
+            v-else-if="permission.isOwner==true && setting==false"
             dark
             color="#55CBD3"
             class="mt-10 ml-2"
+            @click="setting = !setting"
           >Setting</v-btn>
+          <v-btn
+            small
+            v-else-if="permission.isOwner==true && setting==true"
+            dark
+            color="#55CBD3"
+            class="mt-10 ml-2"
+            @click="setting = !setting"
+          >Save</v-btn>
           <v-btn
             v-else-if="permission.isOwner==false"
             dark
             color="#55CBD3"
             class="mt-10 ml-2"
+            @click="leaveGroup()"
           >LEAVE</v-btn>        
         </v-row>
       </v-col>
@@ -79,23 +92,28 @@
       </div>
       <div class="subtitle mt-6">Member:</div>
       <div class="mt-4 mb-4">
-        <!-- <v-col> -->
-          <v-row
-            class="ml-4"
-            style="color: #646868"
-            v-for="mem in group.members"
-            v-bind:key="mem.id"
-          >
-            <v-avatar
-              class="mt-2"
-              size="40">
-              <img
-                :src="getPhoto(mem.photo)"
-              >
-            </v-avatar>
-            <p class="ml-4 mt-4">{{mem.name}}</p>
-          </v-row>
-        <!-- </v-col> -->
+        <v-row
+          class="ml-4"
+          style="color: #646868"
+          v-for="mem in group.members"
+          v-bind:key="mem.id"
+        >
+          <v-avatar
+            @click="$router.push(`/profile/${mem.id}`)"
+            class="mt-2"
+            size="40">
+            <img
+              :src="getPhoto(mem.photo)"
+            >
+          </v-avatar>
+          <p class="ml-4 mt-4">{{mem.name}}</p>
+        </v-row>
+        <v-btn
+          small
+          v-if="permission.isOwner==true"
+          class="mt-10 ml-2"
+          @click="$router.push(`/room/member/1`)"
+        >Invite Members</v-btn>
       </div>
     </v-col>
     <v-col cols="8" class="mr-3">
@@ -182,12 +200,13 @@ export default {
   components: {dashboard, join},
   data() {
     return {
-      members: [{'id': 1, 'image': "", 'name': "Sam"},{'id': 2, 'image': "", 'name': "Amy"}],
-      haveSkill: ["python", "JavaScript", "sususususususlong"],
-      needSkill: ["React", "CSS", "FLASK"],
-      roomName: "Room: SENG2021 PROJECTS",
-      groupName: "Attack on HD",
-      description: "We are passionate, enthusiastic, with highly capable coding abilties to ATTACK that HD with full force! Join us if u wanna work hard :)",
+      setting: false,
+      permission:  {
+        'inGroup': false,
+        'isMember': false,
+        'isOwner': false,
+      },
+
       type: 'week',
       types: ['month', 'week', 'day', '4day'],
       // types: ['month', 'week', 'day', '4day'],
@@ -204,56 +223,64 @@ export default {
       events: [],
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
-      permission:  {
-        'inGroup': false,
-        'isMember': false,
-        'isOwner': false,
-      }
     }
   },
   computed: {
     ...mapState(["user"]),
   },
   methods: {
+    ...mapMutations(["SAVE_GROUP"]),
     getRoomName() {
+      //save group id
+      this.SAVE_GROUP(this.group.id)
       return "Room: " + this.group.room
     },
     getUserPhoto() {
       console.log("http://localhost:8000" + this.user.photo)
       return "http://localhost:8000" + this.user.photo
     },
-    getEvents ({ start, end }) {
-      const events = []
-
-      const min = new Date(`${start.date}T00:00:00`)
-      const max = new Date(`${end.date}T23:59:59`)
-      const days = (max.getTime() - min.getTime()) / 86400000
-      const eventCount = this.rnd(days, days + 20)
-
-      for (let i = 0; i < eventCount; i++) {
-        const allDay = this.rnd(0, 3) === 0
-        const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-        const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-        const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-        const second = new Date(first.getTime() + secondTimestamp)
-
-        events.push({
-          name: this.names[this.rnd(0, this.names.length - 1)],
-          start: first,
-          end: second,
-          color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay,
-        })
-      }
-
-      this.events = events
-    },
     getImageURL() {
       var url = this.group.photo.replace(/^"(.*)"$/, '$1')
-      return "http://127.0.0.1:8000/media/" + url
+      if(url.length > 2){
+        var url = url.replace(/^"(.*)"$/, '$1')
+        return "http://127.0.0.1:8000/media/" + url
+      }else{
+        return "/img/spaceman.png"
+      }
     },
     getPhoto(path) {
       return "http://localhost:8000" + path
+    },
+    getEvents ({ start, end }) {
+      const events = []
+
+      Array.from(this.group.events).forEach( e => {
+        start = new Date(e.start)
+        end = new Date(e.end)
+
+        var d = start.getDate()
+        var y = start.getFullYear()
+        var m = start.getMonth() + 1
+        var h = start.getHours()
+        var mins = start.getMinutes()
+        start = y+'-'+m+'-'+d + ' ' + h +':'+mins+'0'
+        
+        d = end.getDate()
+        y = end.getFullYear()
+        m = end.getMonth() + 1
+        h = end.getHours()
+        mins = end.getMinutes()
+        end = y+'-'+m+'-'+d + ' ' + h +':'+mins+'0'
+
+        events.push({
+          name: e.eventName,
+          start: start,
+          end: end,
+          color: this.colors[this.rnd(0, this.colors.length - 1)],
+        })
+      })
+      this.events = events
+      console.log(this.events)
     },
     getEventColor (event) {
       return event.color
@@ -268,8 +295,14 @@ export default {
       }catch(e) {
         console.log(e)
       }
+    },
+    async leaveGroup() {
+      try {
+        // let res = await this.$axios.$get(``)
+      }catch(e) {
 
-    }
+      }
+    },
   },
   async mounted() {
     this.getPermission()

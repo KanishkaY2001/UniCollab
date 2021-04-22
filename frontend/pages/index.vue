@@ -19,13 +19,21 @@
         <div class="sign-up">Sign-up to start collaborating</div>
       </div>
     </v-row>
-    <v-row>
+    <v-col>
        <div style="height: 50px; width: 100%">
         <v-btn large color="#55CBD3" dark elevation="0" @click="$router.push(`/signup`)" style="width: 150px;margin-left: -75px;left: 50%">
           GET STARTED
         </v-btn>
+       </div>
+       <div style="height: 50px; width: 100%">
+        <v-btn large color="#55CBD3" dark elevation="0" style="width: 250px;margin-left: -123px;left: 50%">
+          <v-icon class="mr40">
+            mdi-instagram
+          </v-icon>
+          SIGN IN WITH INSTAGRAM
+        </v-btn>
       </div>
-    </v-row>
+    </v-col>
   </div>
 </template>
 

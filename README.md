@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # UniCollab
 **UniCollab** is a web application, created by Seng2021 members, that allows university students to form groups for academic, extracurricular, and casual events and activities. With a mission to connect students and create opportunities, our app allows for intuitive collaboration.
 ## Hosted On:
@@ -17,6 +18,12 @@
 ### high fidelity link: https://www.figma.com/file/k896mzR2rCloZmdkdZPcQK/UniCollab-High-Fi-Prototyping?node-id=98%3A0
 
 ## Build Setup
+=======
+# Unicollab
+
+## Build Setup
+
+>>>>>>> 2a3b613eba5eb08c1ff52d5e8f3bc26cd240e140
 ```bash
 # install dependencies
 $ npm install

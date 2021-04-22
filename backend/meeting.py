@@ -26,9 +26,9 @@ def sortGroupByDistance(groups, user):
             distance = res['rows'][0]['elements'][0]['distance']['text']
             distance = float(distance.split(' ')[0])
             match = 0
-            if 0 <= distance and distance <= 10:
+            if 0 <= distance and distance < 10:
                 match = 2
-            elif distance < 10 and distance <= 30:
+            elif distance <= 10 and distance < 30:
                 match = 1
             else:
                 match = 0
@@ -56,9 +56,9 @@ def sortUserByDistance(users, group):
             distance = res['rows'][0]['elements'][0]['distance']['text']
             distance = float(distance.split(' ')[0])
             match = 0
-            if 0 <= distance and distance <= 10:
+            if 0 <= distance and distance < 10:
                 match = 2
-            elif distance < 10 and distance <= 30:
+            elif distance <= 10 and distance < 30:
                 match = 1
             else:
                 match = 0

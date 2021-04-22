@@ -91,16 +91,16 @@
                 <v-card
                   class="ma-2"
                   height="120"
-                  width="100"
+                  width="115"
                   color="#D2F3F5"
-                  @click="$router.push(`/room/1`)"
                 >
-                <div style="text-align: center; color:#646868" class="mt-2">{{room.name}}</div>
+                <div style="text-align: center; color:#646868" class="mt-2" @click="$router.push(`/room/${room.id}`)">{{room.name}}</div>
                 <v-btn
-                  class="mt-9 ml-4"
+                  class="mt-9 ml-6"
                   style="position: absolute; bottom: 10%"
                   small
                   dark
+                  @click="leaveRoom(room.id)"
                   color="#55CBD3">LEAVE
                 </v-btn>
                 </v-card>
@@ -122,19 +122,19 @@
               show-arrows
             >
               <v-slide-item
-                v-for="room in myGruops"
-                :key="room.id"
+                v-for="g in myGruops"
+                :key="g.id"
               >
                 <v-card
                   class="ma-2"
                   height="120"
-                  width="100"
+                  width="115"
                   color="#D2F3F5"
-                  @click="$router.push(`/group/1`)"
+                  @click="$router.push(`/group/${g.id}`)"
                 >
-                <div style="text-align: center; color:#646868" class="mt-2">{{room.name}}</div>
+                <div style="text-align: center; color:#646868" class="mt-2">{{g.name}}</div>
                 <v-btn
-                  class="mt-9 ml-4"
+                  class="mt-9 ml-6"
                   style="position: absolute; bottom: 10%"
                   small
                   dark
@@ -163,19 +163,9 @@ export default {
   computed: {
     ...mapState(["user"]),
   },
-
-  // async asyncData({ $axios, params }) {
-  //   try {
-  //     let rooms = await $axios.$get(`/rooms/`);
-  //     let myRooms = await $axios.$get(`${this.user.id}/rooms`);
-  //     return { rooms, myRooms }
-  //   } catch (e) {
-  //     return { group: {} };
-  //   }
-  // },
   async mounted() {
     try {
-      this.rooms = await this.$axios.$get(`/rooms/`);
+      this.rooms = await this.$axios.$get(`/student/${this.user.id}/allrooms`);
       this.myRooms = await this.$axios.$get(`student/${this.user.id}/rooms`);
       this.myGruops = await this.$axios.$get(`student/${this.user.id}/groups`);
 
@@ -204,6 +194,15 @@ export default {
       try {
         let res = this.$axios.$get(`student/${this.user.id}/joinroom/${rid}`)
         alert('JOIN')
+      }catch(e) {
+        console.log(e)
+      }
+    },
+    async leaveRoom(rid) {
+      try {
+        let res = await this.$axios.$get(`student/${this.user.id}/leaveroom/${rid}`)
+        this.myRooms = await this.$axios.$get(`student/${this.user.id}/rooms`);
+        alert('LEAVE')
       }catch(e) {
         console.log(e)
       }

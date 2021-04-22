@@ -2,12 +2,13 @@ from django.shortcuts import render
 from django.http import JsonResponse
 
 from .serializers import StudentSerializer, EventSerializer
-from .models import Student
+from .models import Student, Event
 from rooms.models import Room, Member
 from groups.models.groups import Group
 from groups.models.groupMembers import GroupMember
 from courses.models import Course
 from courses.serializers import CourseSerializer
+from sync_calendar import main
 
 import json
 # Create your views here.
@@ -27,10 +28,11 @@ def user(request, id=id):
     return JsonResponse(user, safe=False)
 
 def getUserJson(student):
-    photo = json.dumps(str(student.photo))
+    photo = StudentSerializer(student).data['photo']
     events = getCalendar(student)
     courses = getCourses(student)
     result = {
+        "id": student.id,
         "name": student.name,
         "bio": student.bio,
         "location": student.location,
@@ -65,6 +67,42 @@ def addCourse(request, id, cname):
     print(cname)
     return JsonResponse(coursedata, safe=False)
 
+def addLocation(request, id, loc):
+    student = getStudent(id)
+    student.location = loc
+    student.save()
+    result = { "location" : student.location }
+    return JsonResponse(result, safe=False)
+
+def syncCalendar(request, id):
+    student = getStudent(id)
+    calendarRet = []
+    events = main()
+    for event in events:
+        studEvent = Event.objects.create(
+            name=event['name'],
+            start=event['start'],
+            end=event['end']
+        )
+        student.calendar.add(studEvent)
+        calendarRet.append(EventSerializer(studEvent).data)
+        student.save()
+    return JsonResponse(calendarRet, safe=False)
+
+def getStudentCalendar(request, id):
+    student = getStudent(id)
+    calendar = []
+    for event in student.calendar.all():
+        calendar.append(EventSerializer(event).data)
+    return JsonResponse(calendar, safe=False)
+
+def deleteCalendar(request, id):
+    result = []
+    student = getStudent(id)
+    for event in student.calendar.all():
+        event.delete()
+    return JsonResponse(result, safe=False)
+
 def studentRooms(request, id):
     rooms = []
     for memb in Member.objects.all():
@@ -79,11 +117,23 @@ def studentGroups(request, id):
     groups = []
     for grMemb in GroupMember.objects.all():
         photo = json.dumps(str(grMemb.group.photo))
-        if (grMemb.member.id == id or grMemb.group.owner.id == id):
+        if (grMemb.member.id == id):
             groups.append({
                 "name": grMemb.group.name,
                 "id": grMemb.group.id,
-                "photo": photo
+                "photo": photo,
+                'descript': grMemb.group.description,
+                "room":  grMemb.group.room.name
+            })
+    for group in Group.objects.all():
+        photo = json.dumps(str(group.photo))
+        if (group.owner.id == id):
+            groups.append({
+                "name": group.name,
+                "id": group.id,
+                "photo": photo,
+                'descript': group.description,
+                "room":  group.room.name
             })
     return JsonResponse(groups, safe=False)
 
@@ -124,3 +174,39 @@ def login(request, email, password):
                 }
             break
     return JsonResponse(result, safe=False)
+
+def leaveRoom(request, id, rid):
+    result = {}
+    student = Student.objects.get(id=id)
+    room = Room.objects.get(id=rid)
+    room.members.remove(student)
+    room.save()
+    for grpMemb in GroupMember.objects.all():
+        if grpMemb.member == student:
+            grpMemb.delete()
+    return JsonResponse(result, safe=False)
+
+def deleteCourse(request, id, cname):
+    result = {}
+    student = Student.objects.get(id=id)
+    for course in Course.objects.all():
+        if course.name == cname:
+            student.courses.remove(course)
+            student.save()
+    return JsonResponse(result, safe=False)
+
+def getRoomsNotIn(request, id):
+    rooms = []
+    valid = 0
+    for room in Room.objects.all():
+        for memb in room.members.all():
+            if (memb.id == id):
+                valid = 1
+                break
+        if valid == 0:
+            rooms.append({
+                "name": room.name,
+                "id": room.id
+            })
+        valid = 0
+    return JsonResponse(rooms, safe=False)

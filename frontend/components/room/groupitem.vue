@@ -1,10 +1,12 @@
 <template>
   <v-row cols="12" class="mt-3" v-bind:class="{frame0: zero, frame1: one, frame2: two}">
     <v-col cols="2" align-self="center">
-      <v-img contain src="/img/spaceman.png"/>
+      <v-img  :src="getGroupImage(group.photo)"/>
     </v-col>
     <v-col cols="3" align-self="center">
-        <div class="group-title mt-2">{{group.name}}</div>
+        <div class="group-title mt-2"
+          @click="goToGroup()"
+        >{{group.name}}</div>
         <div class="discript-text mt-1">{{group.discript}}</div>
     </v-col>
     <v-col cols="3">
@@ -33,7 +35,7 @@
             <div
               v-for="(item, i) in group.members"
               v-bind:key="i"
-              class="list-text ml-1">- {{item}}
+              class="list-text ml-1">- {{item.name}}
             </div>
           </div>
         </v-sheet>
@@ -63,10 +65,21 @@ export default {
     onScroll () {
       this.scrollInvoked++
     },
+    goToGroup() {
+      this.$router.push(`/group/${this.group.id}`)
+    },
+    getGroupImage(url) {
+      if(url.length > 2){
+        var url = url.replace(/^"(.*)"$/, '$1')
+        return "http://127.0.0.1:8000/media/" + url
+      }else{
+        return "/img/spaceman.png"
+      }
+    },
   },
   computed: {
     zero: function(){
-      return this.group.match == 0
+      return this.group.match == 0 || this.group.match == null
     },
     one: function(){
       return this.group.match == 1
