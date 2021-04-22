@@ -82,7 +82,7 @@
         v-for="m in members"
         v-bind:key="m.id"
         :mem="m"
-        <!-- :skills="getSkills(m.id)" -->
+        :skills="getSkills(m.id)"
       ></memitem>
   </div>
   <div class="footer mt-10">
@@ -105,14 +105,6 @@ export default {
       let members = await $axios.$get(`/rooms/${store.getters.userId}/${params.id}/members`)
       let room = await $axios.$get(`/rooms/${params.id}`)
       let userSkill = []
-      // Array.from(this.members).forEach( m => {
-      //   try{
-      //     let skill = await $axios.$get(`/rooms/${m.id}/matchedskills/${this.currentGroup}`)
-      //     userSkill.push(skill)
-      //   }catch(e){
-      //     console.log(e)
-      //   }
-      // })
       console.log(userSkill)
       return { members, room, userSkill }
     }catch(e){

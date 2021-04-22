@@ -71,7 +71,7 @@
             <p
               class="mr-7"
               style="color: #646868"
-              v-for="skill in group.skills"
+              v-for="skill in group.weHave"
               v-bind:key="skill"
             >{{skill}}</p>
           <!-- </div> -->
@@ -84,7 +84,7 @@
             <p
               class="mr-7"
               style="color: #646868"
-              v-for="skill in group.skills"
+              v-for="skill in group.lookingFor"
               v-bind:key="skill"
             >{{skill}}</p>
           <!-- </div> -->
