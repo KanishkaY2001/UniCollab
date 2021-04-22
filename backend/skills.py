@@ -2,6 +2,8 @@ import sys
 import re
 import json
 
+from courses.models import Course
+
 '''Given a list of group objects and the current user object, sorts the groups in
 terms of skill compatibilities (groups which match the user's skills.
 Skill compatibilitiy is determined by how needed a user is by a group (lookingFor)
@@ -9,24 +11,24 @@ and how well the user already synergises with the group's existing 'We Have' ski
 Furthermore, the more times a keyword pops up in different courses, the more 'familiar'
 a user is with that keyword and so, '''
 def sortGroupBySkills(groups, user):
-    file = open("scrape.json", "r")
-    coursesInfo = json.load(file)
+    #file = open("scrape.json", "r")
+    #coursesInfo = json.load(file)
     sortedGroups = []
     for group in groups:
         # print(f"MATCHING FOR GROUP {group['name']}")
         lookingForMatched = {}
         hasMatched = {}
-        for course in coursesInfo:
+        for course in Course.objects.all():
             # A skill can only match once for each course to prevent repeated keywords
             # from affecting the stats
             lookingForMatchedSkills = []
             hasMatchedSkills = []
 
-            if course in user['courses']:
+            if course in user.courses.all():
                 # See if this user is what the group is looking for
-                for skill in group['lookingForSkills']:
+                for skill in group['lookingFor']:
                     # print(f"LOOKING FOR {skill} in {course}")
-                    match = re.search(r'[\s|\"]'+skill+r'[\s|,|:|\"|\;]', coursesInfo[course], re.IGNORECASE)
+                    match = re.search(r'[\s|\"]'+skill+r'[\s|,|:|\"|\;]', course.info, re.IGNORECASE)
                     if match and not skill in lookingForMatchedSkills:
                         if not skill in lookingForMatched:
                             lookingForMatched[skill] = 1
@@ -34,9 +36,9 @@ def sortGroupBySkills(groups, user):
                             lookingForMatched[skill] += 1
                 
                 # See if this group has existing synergies with the user
-                for skill in group['hasSkills']:
+                for skill in group['weHave']:
                     # print(f"HAS {skill} in {course}")
-                    match = re.search(r'[\s|\"]'+skill+r'[\s|,|:|\"|\;]', coursesInfo[course], re.IGNORECASE)
+                    match = re.search(r'[\s|\"]'+skill+r'[\s|,|:|\"|\;]', course.info, re.IGNORECASE)
                     if match and not skill in hasMatchedSkills:
                         if not skill in hasMatched:
                             hasMatched[skill] = 1
@@ -63,12 +65,9 @@ def sortGroupBySkills(groups, user):
             matchScore = 1
         if synergyScore >= 3:
             matchScore = 2
-
-        sortedGroups.append({
-            'id': group['id'],
-            'score': synergyScore,
-            'match': matchScore
-        })
+        group['match'] = matchScore
+        group['score'] = synergyScore
+        sortedGroups.append(group)
 
     # Sort groups with highest synergy score first
     sortedGroups = sorted(sortedGroups, key=lambda k: k['score'], reverse=True)
@@ -192,4 +191,4 @@ groups = [
     }
 ]
 
-print(sortGroupBySkills(groups, user))
+#print(sortGroupBySkills(groups, user))
