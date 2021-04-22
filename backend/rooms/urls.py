@@ -10,5 +10,6 @@ urlpatterns = [
   path('<int:id>/<int:rid>/creategroup/<str:name>', createGroup),
   path('<int:id>/location/<int:rid>', getLocation),
   path('<int:id>/calendar/<int:rid>', getCalendarGroups),
+  path('<int:id>/skills/<int:rid>', getSkillsGroups),
   path('<int:id>/<int:rid>/<int:gid>/members', getRoomMembers),
 ]
