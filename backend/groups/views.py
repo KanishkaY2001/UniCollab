@@ -13,6 +13,7 @@ from students.models import Student
 
 from students.serializers import StudentSerializer
 from groups.serializers import CalendarSerializer
+from matched_skills import lookingfor
 
 # Create your views here.
 def getGroupById(request, id=id):
@@ -172,4 +173,7 @@ def joinGroup(request, gid, id):
   )
   return JsonResponse(result, safe=False)
 
-
+def getRoomId(request, gid):
+  group = Group.objects.get(id=gid)
+  result = { "id": group.room.id }
+  return JsonResponse(result, safe=False)
