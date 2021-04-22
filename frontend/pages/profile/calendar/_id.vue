@@ -146,10 +146,10 @@ export default {
     },
     async sync() {
       try{
-        console.log("here")
         let res = await this.$axios.$get(`/student/${this.$route.params.id}/sync`)
         this.userInfo = await this.$axios.$get(`/student/` + params.id);
         this.getEvents()
+        console.log("here")
       }catch(e) {
         console.log(e)
       }

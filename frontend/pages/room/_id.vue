@@ -161,6 +161,24 @@ export default {
         }catch(e){
           console.log(e)
         }
+      }else if(item == "Skillset") {
+        try {
+          console.log("skillset")
+          let res = await this.$axios.$get(`rooms/${this.user.id}/skills/${this.room.id}`)
+          console.log(res)
+          this.groups = res
+        }catch(e){
+          console.log(e)
+        }
+      }else {
+        try {
+          console.log("overall")
+          let res = await this.$axios.$get(`rooms/${this.user.id}/overall/${this.room.id}`)
+          console.log(res)
+          this.groups = res
+        }catch(e){
+          console.log(e)
+        }
       }
     }
   }

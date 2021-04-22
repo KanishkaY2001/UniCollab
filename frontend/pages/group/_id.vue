@@ -17,7 +17,11 @@
           <v-col cols="7" class="pt-8 ml-7">
             <div style="background-color: white; border-radius: 10px; height: 100px" class="pl-4 pt-2">
               <div style="color: #55CBD3; font-size: 20px">About us</div>
-              <div style="font-size: 16px; color: #646868">
+              <v-text-field
+                v-model="group.descript"
+                v-if="permission.isOwner==true && setting==true">
+              </v-text-field>
+              <div v-else style="font-size: 16px; color: #646868">
                 {{group.descript}}
               </div>
             </div>
@@ -50,7 +54,7 @@
             dark
             color="#55CBD3"
             class="mt-10 ml-2"
-            @click="setting = !setting"
+            @click="setting = !setting; save()"
           >Save</v-btn>
           <v-btn
             v-else-if="permission.isOwner==false"
@@ -310,6 +314,14 @@ export default {
 
       }
     },
+    async save() {
+      try {
+        // <int:gid>/description/<str:descrip>
+        let res = await this.$axios.$get(`/group/` + this.$route.params.id + `/description/${this.group.descript}`);
+      }catch(e){
+        console.log(e)
+      }
+    }
   },
   async mounted() {
     this.getPermission()
