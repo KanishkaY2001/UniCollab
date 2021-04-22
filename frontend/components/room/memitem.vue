@@ -17,7 +17,7 @@
         max-height="100">
         <div> 
           <div
-            v-for="(item, i) in skills"
+            v-for="(item, i) in mem.skills"
             v-bind:key="i"
             class="list-text ml-1">- {{item}}
           </div>
@@ -38,7 +38,7 @@
 <script>
 import { mapState } from "vuex"
 export default {
-  props: ["mem", "skills"],
+  props: ["mem"],
   data() {
     return {
       skills: {}
@@ -58,7 +58,7 @@ export default {
       console.log(url)
       if(url.length > 2){
         var url = url.replace(/^"(.*)"$/, '$1')
-        return "http://127.0.0.1:8000" + url
+        return "http://127.0.0.1:8000/media/" + url
       }else{
         return "/img/spaceman.png"
       }

@@ -82,7 +82,6 @@
         v-for="m in members"
         v-bind:key="m.id"
         :mem="m"
-        :skills="getSkills(m.id)"
       ></memitem>
   </div>
   <div class="footer mt-10">
@@ -102,11 +101,10 @@ export default {
   components: { dashboard, memitem },
   async asyncData({ $axios, params, store}) {
     try {
-      let members = await $axios.$get(`/rooms/${store.getters.userId}/${params.id}/members`)
+      let members = await $axios.$get(`/rooms/${store.getters.userId}/${params.id}/${store.getters.groupId}/members`)
       let room = await $axios.$get(`/rooms/${params.id}`)
-      let userSkill = []
-      console.log(userSkill)
-      return { members, room, userSkill }
+      console.log(members)
+      return { members, room }
     }catch(e){
       console.log(e)
       return { groups: {} };
