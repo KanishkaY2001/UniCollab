@@ -25,18 +25,56 @@ def sortGroupByDistance(groups, user):
         if res['rows'][0]['elements'][0]['status'] == 'OK':
             distance = res['rows'][0]['elements'][0]['distance']['text']
             distance = float(distance.split(' ')[0])
-            group["distance"] = distance
             match = 0
-            if (distance < 10):
+            if 0 <= distance and distance < 10:
                 match = 2
-            elif (distance < 30):
+            elif distance <= 10 and distance < 30:
                 match = 1
-            group["match"] = match
-            nearestGroups.append(group)
+            else:
+                match = 0
+
+            nearestGroups.append({
+                "id": group['id'],
+                "name": group['name'],
+                "location": group['location'],
+                "distance": distance,
+                'match': match
+            })
 
     nearestGroups = sorted(nearestGroups, key=lambda k: k['distance'])
 
     return nearestGroups
+
+'''Given a list of user objects and the current group object, returns the list of users
+sorted in ascending order within the given distance'''
+def sortUserByDistance(users, group):
+    nearestUsers = []
+    for user in users:
+        r = requests.get(url + "origins=" + user['location'] + "&destinations=" + group['location'] + "&key=" + api_key)
+        res = r.json()
+        if res['rows'][0]['elements'][0]['status'] == 'OK':
+            distance = res['rows'][0]['elements'][0]['distance']['text']
+            distance = float(distance.split(' ')[0])
+            match = 0
+            if 0 <= distance and distance < 10:
+                match = 2
+            elif distance <= 10 and distance < 30:
+                match = 1
+            else:
+                match = 0
+            nearestUsers.append({
+                "id": group['id'],
+                "name": group['name'],
+                "location": group['location'],
+                "distance": distance,
+                "match": match
+            })
+
+    nearestUsers = sorted(nearestUsers, key=lambda k: k['distance'])
+
+    return nearestUsers
+
+
 
 
 

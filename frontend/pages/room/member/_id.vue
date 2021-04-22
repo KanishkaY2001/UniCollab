@@ -82,6 +82,7 @@
         v-for="m in members"
         v-bind:key="m.id"
         :mem="m"
+        <!-- :skills="getSkills(m.id)" -->
       ></memitem>
   </div>
   <div class="footer mt-10">
@@ -102,11 +103,18 @@ export default {
   async asyncData({ $axios, params, store}) {
     try {
       let members = await $axios.$get(`/rooms/${store.getters.userId}/${params.id}/members`)
-      // let skills = await $axios.$get(`/rooms/${params.id}/matchedskills/${store.getters.groupId}`)
       let room = await $axios.$get(`/rooms/${params.id}`)
-      // console.log(members)
-      // console.log(skills)
-      return { members, room }
+      let userSkill = []
+      // Array.from(this.members).forEach( m => {
+      //   try{
+      //     let skill = await $axios.$get(`/rooms/${m.id}/matchedskills/${this.currentGroup}`)
+      //     userSkill.push(skill)
+      //   }catch(e){
+      //     console.log(e)
+      //   }
+      // })
+      console.log(userSkill)
+      return { members, room, userSkill }
     }catch(e){
       console.log(e)
       return { groups: {} };
@@ -127,7 +135,7 @@ export default {
     getUserPhoto() {
       return "http://localhost:8000" + this.user.photo
     },
-    ...mapState(['user', 'currentGroup'])
+    ...mapState(['user', 'currentGroup']),
   },
   methods: {
     async createGroup() {
@@ -163,7 +171,7 @@ export default {
           console.log(e)
         }
       }
-    }
+    },
   }
 }
 

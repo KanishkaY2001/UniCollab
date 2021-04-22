@@ -179,7 +179,7 @@
 <script>
 import dashboard from "@/components/dashboard"
 import join from "@/components/group/join"
-import { mapState } from "vuex"
+import { mapState, mapMutations } from "vuex"
 
 export default {
   async asyncData({ $axios, params }) {
@@ -232,7 +232,6 @@ export default {
     ...mapMutations(["SAVE_GROUP"]),
     getRoomName() {
       //save group id
-      this.SAVE_GROUP(this.group.id)
       return "Room: " + this.group.room
     },
     getUserPhoto() {
@@ -306,6 +305,7 @@ export default {
   },
   async mounted() {
     this.getPermission()
+    this.SAVE_GROUP(this.group.id)
     // try {
     //   let permission = await this.$axios.$get(`/group/${route.params.id}/user/${userId}/permission/`);
     //   this.permission = permission;
