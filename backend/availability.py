@@ -58,6 +58,61 @@ def sortGroupByAvailabilities(groups, user):
     
     return sortedGroups
 
+'''Given a list of user objects and the current group object, sorts the users in
+terms of availability compatibilities (in terms of percentage of group's meetings the
+user can attend)'''
+def sortUserByAvailabilities(users, group):
+    sortedUsers = []
+
+    # Convert the group's preferred meeting times to date time objects
+    groupPreferredMeetingTimes = []
+    for event in group['preferredMeetingTimes']:
+        date_time_start = datetime.datetime.strptime(event['start'], '%Y-%m-%dT%H:%M:%SZ')
+        date_time_end = datetime.datetime.strptime(event['end'], '%Y-%m-%dT%H:%M:%SZ')
+        groupPreferredMeetingTimes.append({
+            "name": event['name'],
+            "start": date_time_start,
+            "end": date_time_end
+        })
+
+    for user in users:
+        nMeetings = 0
+        nAvailable = 0
+
+        # Convert user's calendar to date time objects and check for clashes
+        for event in user['calendar']:
+            date_time_start = datetime.datetime.strptime(event['start'], '%Y-%m-%dT%H:%M:%SZ')
+            date_time_end = datetime.datetime.strptime(event['end'], '%Y-%m-%dT%H:%M:%SZ')
+
+            available = True
+            for time in groupPreferredMeetingTimes:
+                if not ((time['start'] < date_time_start and time['end'] <= date_time_start) or (date_time_end <= time['start'])):
+                    available = False
+                    break
+            
+            if available == True:
+                nAvailable += 1
+
+        percentageAvailable = nAvailable / nMeetings
+
+        matchedScore = 0
+        if percentageAvailable >= 0.6:
+            matchedScore = 1
+        if percentageAvailable >= 0.9:
+            matchedScore = 2
+
+        print(f"User {user['id']} is available for {percentageAvailable} of {group['name']}'s meetings")
+        user['score'] = percentageAvailable
+        user['match'] = matchedScore
+        sortedUsers.append(user)
+
+    # Sort for groups with highest score first
+    sortedUsers = sorted(sortedUsers, key=lambda k: k['score'], reverse=True)
+    
+    return sortedUsers
+
+
+
 
 '''TEST DATA'''
 user = {
