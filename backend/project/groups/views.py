@@ -36,6 +36,16 @@ def getPermission(request, gid, zid):
     'isMember': False,
     'isOwner': False
   }
+  for group in Group.objects.all():
+    print("here")
+    if (group.id == gid and group.owner.id == zid):
+      result = {
+        'inGroup': True,
+        'isMember': True,
+        'isOwner': True
+      }
+    return JsonResponse(result, safe=False)
+
   for groupMem in GroupMember.objects.all():
     if (groupMem.group.id == gid and groupMem.member.id == zid):
       if groupMem.status == True:
@@ -50,13 +60,6 @@ def getPermission(request, gid, zid):
           'isMember': False,
           'isOwner': False
         }
-      break
-    elif (groupMem.group.id == gid and groupMem.group.owner.id == zid):
-      result = {
-        'inGroup': True,
-        'isMember': True,
-        'isOwner': True
-      }
       break
   return JsonResponse(result, safe=False)
 

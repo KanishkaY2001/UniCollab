@@ -19,6 +19,11 @@ export const mutations = {
   SAVE_GROUP(state, id) {
     if(!id) return
     state.currentGroup = id
+  },
+  LOG_OUT(state){
+    state.userId = 0;
+    state.user = ""
+    state.currentGroup = 0;
   }
 }
 
