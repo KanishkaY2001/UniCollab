@@ -144,6 +144,7 @@ export default {
       if(item == "Location"){
         try{
           // '<int:id>/location/<int:rid>'
+          console.log("location")
           let res = await this.$axios.$get(`rooms/${this.user.id}/location/${this.room.id}`)
           console.log(res)
           this.groups = res
@@ -153,6 +154,7 @@ export default {
       }else if(item == "Timetable") {
         try{
           // '<int:id>/location/<int:rid>'
+          console.log("timetable")
           let res = await this.$axios.$get(`rooms/${this.user.id}/calendar/${this.room.id}`)
           console.log(res)
           this.groups = res

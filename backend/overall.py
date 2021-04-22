@@ -26,11 +26,9 @@ def sortOverallGroups(groups, user, user2):
     for group in sortedAvailabilities:
         overallScore[group['id']]['match'] += group['match']
     
-    for key in overallScore:
-        sortedOverall.append({
-            'id': key,
-            'match': overallScore[key]['match']
-        })
+    for group in groups:
+        group['match'] = overallScore[group['id']]['match']
+        sortedOverall.append(group)
 
     sortedOverall = sorted(sortedOverall, key=lambda k: k['match'], reverse=True)
     return sortedOverall
@@ -58,11 +56,9 @@ def sortOverallUsers(users, group):
     for user in sortedAvailabilities:
         overallScore[user['id']]['match'] += user['match']
 
-    for key in overallScore:
-        sortedOverall.append({
-            'id': key,
-            'match': overallScore[key]['match']
-        })
+    for user in users:
+        user['match'] = overallScore[user['id']]['match']
+        sortedOverall.append(user)
 
     sortedOverall = sorted(sortedOverall, key=lambda k: k['match'], reverse=True)
     return sortedOverall
