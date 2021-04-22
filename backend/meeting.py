@@ -32,14 +32,9 @@ def sortGroupByDistance(groups, user):
                 match = 1
             else:
                 match = 0
-
-            nearestGroups.append({
-                "id": group['id'],
-                "name": group['name'],
-                "location": group['location'],
-                "distance": distance,
-                'match': match
-            })
+            group['distance'] = distance
+            group['match'] = match
+            nearestGroups.append(group)
 
     nearestGroups = sorted(nearestGroups, key=lambda k: k['distance'])
 
