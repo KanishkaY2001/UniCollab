@@ -38,11 +38,20 @@
           >Request Sent</v-btn>
           <v-btn
             small
-            v-else-if="permission.isOwner==true"
+            v-else-if="permission.isOwner==true && setting==false"
             dark
             color="#55CBD3"
             class="mt-10 ml-2"
+            @click="setting = !setting"
           >Setting</v-btn>
+          <v-btn
+            small
+            v-else-if="permission.isOwner==true && setting==true"
+            dark
+            color="#55CBD3"
+            class="mt-10 ml-2"
+            @click="setting = !setting"
+          >Save</v-btn>
           <v-btn
             v-else-if="permission.isOwner==false"
             dark
@@ -83,24 +92,28 @@
       </div>
       <div class="subtitle mt-6">Member:</div>
       <div class="mt-4 mb-4">
-        <!-- <v-col> -->
-          <v-row
-            class="ml-4"
-            style="color: #646868"
-            v-for="mem in group.members"
-            v-bind:key="mem.id"
-          >
-            <v-avatar
-              @click="$router.push(`/profile/${mem.id}`)"
-              class="mt-2"
-              size="40">
-              <img
-                :src="getPhoto(mem.photo)"
-              >
-            </v-avatar>
-            <p class="ml-4 mt-4">{{mem.name}}</p>
-          </v-row>
-        <!-- </v-col> -->
+        <v-row
+          class="ml-4"
+          style="color: #646868"
+          v-for="mem in group.members"
+          v-bind:key="mem.id"
+        >
+          <v-avatar
+            @click="$router.push(`/profile/${mem.id}`)"
+            class="mt-2"
+            size="40">
+            <img
+              :src="getPhoto(mem.photo)"
+            >
+          </v-avatar>
+          <p class="ml-4 mt-4">{{mem.name}}</p>
+        </v-row>
+        <v-btn
+          small
+          v-if="permission.isOwner==true"
+          class="mt-10 ml-2"
+          @click="$router.push(`/room/member/1`)"
+        >Invite Members</v-btn>
       </div>
     </v-col>
     <v-col cols="8" class="mr-3">
@@ -187,12 +200,7 @@ export default {
   components: {dashboard, join},
   data() {
     return {
-      members: [{'id': 1, 'image': "", 'name': "Sam"},{'id': 2, 'image': "", 'name': "Amy"}],
-      haveSkill: ["python", "JavaScript", "sususususususlong"],
-      needSkill: ["React", "CSS", "FLASK"],
-      roomName: "Room: SENG2021 PROJECTS",
-      groupName: "Attack on HD",
-      description: "We are passionate, enthusiastic, with highly capable coding abilties to ATTACK that HD with full force! Join us if u wanna work hard :)",
+      setting: false,
       permission:  {
         'inGroup': false,
         'isMember': false,
@@ -221,7 +229,10 @@ export default {
     ...mapState(["user"]),
   },
   methods: {
+    ...mapMutations(["SAVE_GROUP"]),
     getRoomName() {
+      //save group id
+      this.SAVE_GROUP(this.group.id)
       return "Room: " + this.group.room
     },
     getUserPhoto() {
