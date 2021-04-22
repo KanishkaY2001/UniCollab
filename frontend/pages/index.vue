@@ -20,17 +20,33 @@
       </div>
     </v-row>
     <v-col>
-       <div style="height: 50px; width: 100%">
+       <div style="height: 50px; width: 100%; margin-bottom: 20px">
         <v-btn large color="#55CBD3" dark elevation="0" @click="$router.push(`/signup`)" style="width: 150px;margin-left: -75px;left: 50%">
           GET STARTED
         </v-btn>
        </div>
        <div style="height: 50px; width: 100%">
-        <v-btn large color="#55CBD3" dark elevation="0" style="width: 250px;margin-left: -123px;left: 50%">
+        <v-btn large color="#F56040" dark elevation="0" style="width: 250px;margin-left: -123px;left: 50%">
           <v-icon class="mr40">
             mdi-instagram
           </v-icon>
           SIGN IN WITH INSTAGRAM
+        </v-btn>
+      </div>
+       <div style="height: 50px; width: 100%">
+        <v-btn large color="#4267B2" dark elevation="0" style="width: 250px;margin-left: -123px;left: 50%">
+          <v-icon class="mr40">
+            mdi-facebook
+          </v-icon>
+          SIGN IN WITH FACEBOOK
+        </v-btn>
+      </div>
+       <div style="height: 50px; width: 100%">
+        <v-btn large color="#4285F4" dark elevation="0" style="width: 250px;margin-left: -123px;left: 50%">
+          <v-icon style="margin-right: 12px">
+            mdi-google
+          </v-icon>
+          SIGN IN WITH GOOGLE
         </v-btn>
       </div>
     </v-col>

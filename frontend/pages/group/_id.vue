@@ -262,14 +262,21 @@ export default {
         var m = start.getMonth() + 1
         var h = start.getHours()
         var mins = start.getMinutes()
-        start = y+'-'+m+'-'+d + ' ' + h +':'+mins+'0'
+        start = y+'-'+m+'-'+d + ' ' + h +':'+mins
+        if(start[-2] == ":"){
+          start += "0"
+        }
         
         d = end.getDate()
         y = end.getFullYear()
         m = end.getMonth() + 1
         h = end.getHours()
         mins = end.getMinutes()
-        end = y+'-'+m+'-'+d + ' ' + h +':'+mins+'0'
+        end = y+'-'+m+'-'+d + ' ' + h +':'+mins
+
+        if(end[-2] == ":"){
+          end += "0"
+        }
 
         events.push({
           name: e.eventName,
@@ -291,6 +298,7 @@ export default {
       try{
         let permission = await this.$axios.$get(`/group/` + this.$route.params.id + `/user/${this.user.id}/permission`);
         this.permission = permission
+        console.log(permission)
       }catch(e) {
         console.log(e)
       }
