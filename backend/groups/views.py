@@ -80,8 +80,8 @@ def getGroupJson(group):
     members = []
     members.append(StudentSerializer(group.owner).data)
     members = getMember(id, members)
-
     skills = getSkills(group.skills)
+    currentSkills = getWeHave(group)
     vacancy = group.capacity - len(members) - 1
     events = getCalendar(id)
     result = {
@@ -93,7 +93,8 @@ def getGroupJson(group):
       'descript': group.description,
       'location': group.preferredmeetingLoc,
       'photo': photo,
-      'skills': skills,
+      'lookingFor': skills,
+      'weHave': currentSkills,
       'capacity': group.capacity,
       'vacancy': vacancy,
       'events': events
@@ -113,8 +114,22 @@ def getMember(id, members):
   return members
  
 def getSkills(skills):
-  skills = skills.split(",")
+  skills = skills.split(", ")
   return skills
+
+def getWeHave(group):
+  skills=""
+  for grpMemb in GroupMember.objects.all():
+    if (grpMemb.group == group):
+      if skills:
+        skills = skills + ", " + grpMemb.skills
+      else :
+        skills = grpMemb.skills
+  if skills:
+    weHaveSkills = skills.split(", ")
+  else: 
+    weHaveSkills = []
+  return weHaveSkills
 
 def getCalendar(id):
   events = []
@@ -164,13 +179,29 @@ def deleteGroup(request, gid):
 
 def joinGroup(request, gid, id):
   result = {}
-  student = Student.objects.get(id=id)
   group = Group.objects.get(id=gid)
-  GroupMember.objects.create(
+  skills = group.skills.split(", ")
+  student = Student.objects.get(id=id)
+  courses = []
+  for course in student.courses.all():
+    courses.append(course.name)
+  matchedskills = lookingfor(skills, courses)
+  print(matchedskills)
+  group = Group.objects.get(id=gid)
+  grpMemb = GroupMember.objects.create(
     group=group,
     member=student,
-    status=True
+    status=True,
   )
+  if matchedskills:
+    grpMemb.skills=", ".join(matchedskills)
+  grpMemb.save()
+
+  for skill in skills:
+    if skill in matchedskills:
+      skills.remove(skill)
+  group.skills = ", ".join(skills)
+  group.save()
   return JsonResponse(result, safe=False)
 
 def getRoomId(request, gid):
