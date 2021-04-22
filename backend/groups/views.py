@@ -188,7 +188,7 @@ def joinGroup(request, gid, id):
   for course in student.courses.all():
     courses.append(course.name)
   matchedskills = lookingfor(skills, courses)
-  print(matchedskills)
+
   group = Group.objects.get(id=gid)
   grpMemb = GroupMember.objects.create(
     group=group,
@@ -209,4 +209,21 @@ def joinGroup(request, gid, id):
 def getRoomId(request, gid):
   group = Group.objects.get(id=gid)
   result = { "id": group.room.id }
+  return JsonResponse(result, safe=False)
+
+def leaveGroup(request, gid, id):
+  result = {}
+  group = Group.objects.get(id=gid)
+  skills = group.skills.split(", ")
+  student = Student.objects.get(id=id)
+  matchedSkills = []
+  for grpMemb in GroupMember.objects.all():
+    if grpMemb.member.id == id and grpMemb.group.id == gid:
+      matchedSkills=grpMemb.skills.split(", ")
+      grpMemb.delete()
+
+  for skill in matchedSkills:
+      skills.add(skill)
+  group.skills = ", ".join(skills)
+  group.save()
   return JsonResponse(result, safe=False)
