@@ -24,7 +24,8 @@ def index(request, id=id):
       rooms.append({
         'name': room.name,
         'id': room.id,
-        'description': room.description
+        'description': room.description,
+        'members' : getRoomMember(room.id)
       })
   return JsonResponse(rooms, safe=False)
 

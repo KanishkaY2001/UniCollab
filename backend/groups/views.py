@@ -223,7 +223,8 @@ def leaveGroup(request, gid, id):
       grpMemb.delete()
 
   for skill in matchedSkills:
-      skills.add(skill)
+      print(skill)
+      skills.append(skill)
   group.skills = ", ".join(skills)
   group.save()
   return JsonResponse(result, safe=False)
