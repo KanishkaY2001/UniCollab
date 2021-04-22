@@ -10,23 +10,24 @@
         <div class="discript-text mt-1">{{mem.bio}}</div>
     </v-col>
     <v-col cols="4">
-      <div class="list-title mt-1">Skills</div>
+      <div class="list-title mt-1">Matched Skills</div>
       <v-sheet
         style="background-color: white;overflow-y: auto;"
         scrollable
         max-height="100">
         <div> 
-          <!-- <div
-            v-for="(item, i) in group.skills"
+          <div
+            v-for="(item, i) in skills"
             v-bind:key="i"
             class="list-text ml-1">- {{item}}
-          </div> -->
+          </div>
         </div>
       </v-sheet>
     </v-col>
     <v-col cols="1" align-self="center">
       <v-btn
         outlined
+        @click="invite()"
       >
         Invite
       </v-btn>
@@ -35,13 +36,18 @@
 </template>
 
 <script>
+import { mapState } from "vuex"
 export default {
-  props: ["mem"],
+  props: ["mem", "skills"],
   data() {
     return {
+      skills: {}
     }
   },
   methods: {
+    check() {
+      console.log(this.skills)
+    },
     onScroll () {
       this.scrollInvoked++
     },
@@ -57,8 +63,13 @@ export default {
         return "/img/spaceman.png"
       }
     },
+    async invite() {
+      // path('<int:gid>/join/<int:id>', joinGroup),
+      let res = await this.$axios.$get(`group/${this.currentGroup}/join/${this.mem.id}`)
+    }
   },
   computed: {
+    ...mapState(['currentGroup']),
     zero: function(){
       return this.mem.match == 0
     },
@@ -68,6 +79,9 @@ export default {
     two: function(){
       return this.mem.match == 2  || this.mem.match == null
     }
+  },
+  mounted() {
+    this.check()
   }
 }
 </script>

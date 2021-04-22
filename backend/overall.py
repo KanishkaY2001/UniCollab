@@ -1,7 +1,7 @@
 import sys
-from meeting import sortGroupByDistance
-from skills import sortGroupBySkills
-from availability import sortGroupByAvailabilities
+from meeting import sortGroupByDistance, sortUserByDistance
+from skills import sortGroupBySkills, sortUserBySkills
+from availability import sortGroupByAvailabilities, sortUserByAvailabilities
 def sortOverallGroups(groups, user):
     sortedDistance = sortGroupByDistance(groups, user)
     sortedSkills = sortGroupBySkills(groups, user)
@@ -34,6 +34,43 @@ def sortOverallGroups(groups, user):
 
     sortedOverall = sorted(sortedOverall, key=lambda k: k['match'], reverse=True)
     return sortedOverall
+
+def sortOverallUsers(users, group):
+    sortedDistance = sortUserByDistance(users, group)
+    sortedSkills = sortUserBySkills(users, group)
+    sortedAvailabilities = sortGroupByAvailabilities(users, group)
+
+    overallScore = {}
+
+    sortedOverall = []
+
+    for user in users:
+        overallScore[user['id']] = {
+            'match': 0
+        }
+
+    for user in sortedDistance:
+        overallScore[user['id']]['match'] += user['match']
+    
+    for user in sortedSkills:
+        overallScore[user['id']]['match'] += user['match']
+
+    for user in sortedAvailabilities:
+        overallScore[user['id']]['match'] += user['match']
+
+    for key in overallScore:
+        sortedOverall.append({
+            'id': key,
+            'match': overallScore[key]['match']
+        })
+
+    sortedOverall = sorted(sortedOverall, key=lambda k: k['match'], reverse=True)
+    return sortedOverall
+
+
+
+
+
 
 ''' TESTING DATA '''
 user = {
