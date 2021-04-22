@@ -15,6 +15,7 @@ from groups.models.groupCalendars import Calendar
 from availability import sortGroupByAvailabilities
 from matched_skills import lookingfor
 from skills import sortGroupBySkills
+from overall import sortOverallGroups
 
 # Create your views here.
 def index(request, id=id):
@@ -204,4 +205,14 @@ def getSkillsGroups(request, id, rid):
     if group.room.id == rid:
       groups.append(getGroupJson(group))
   sortedGroups = sortGroupBySkills(groups, student)
+  return JsonResponse(sortedGroups, safe=False)
+
+def getOverallGroups(request, id, rid):
+  groups = []
+  student = getStudentJson(id)
+  student2 = Student.objects.get(id=id)
+  for group in Group.objects.all():
+    if group.room.id == rid:
+      groups.append(getGroupJson(group))
+  sortedGroups = sortOverallGroups(groups, student, student2)
   return JsonResponse(sortedGroups, safe=False)

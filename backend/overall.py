@@ -2,9 +2,9 @@ import sys
 from meeting import sortGroupByDistance, sortUserByDistance
 from skills import sortGroupBySkills, sortUserBySkills
 from availability import sortGroupByAvailabilities, sortUserByAvailabilities
-def sortOverallGroups(groups, user):
+def sortOverallGroups(groups, user, user2):
     sortedDistance = sortGroupByDistance(groups, user)
-    sortedSkills = sortGroupBySkills(groups, user)
+    sortedSkills = sortGroupBySkills(groups, user2)
     sortedAvailabilities = sortGroupByAvailabilities(groups, user)
 
     # Get the total matched score for each group
@@ -204,4 +204,4 @@ groups = [
 ]
 
 
-print(sortOverallGroups(groups, user))
+#print(sortOverallGroups(groups, user))
