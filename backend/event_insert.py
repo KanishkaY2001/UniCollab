@@ -14,8 +14,8 @@ name = input()
 print("wanna weekly recurrence event input \"yes\" else input \"no\": ")
 user_recurrence = input()
 
-start_datetime = "2021-04-26T09:00:00+10:00"
-end_datetime = "2021-04-26T11:00:00+10:00"
+start_datetime = "2021-04-26T15:00:00+10:00"
+end_datetime = "2021-04-26T17:00:00+10:00"
 
 if ("yes" == user_recurrence):
 

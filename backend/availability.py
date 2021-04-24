@@ -40,7 +40,10 @@ def sortGroupByAvailabilities(groups, user):
             if available == True:
                 nAvailable += 1
 
-        percentageAvailable = nAvailable / nMeetings
+        if nMeetings != 0:
+            percentageAvailable = nAvailable / nMeetings
+        else :
+            percentageAvailable = 1
 
         matchedScore = 0
         if percentageAvailable >= 0.6:
@@ -92,8 +95,10 @@ def sortUserByAvailabilities(users, group):
             
             if available == True:
                 nAvailable += 1
-
-        percentageAvailable = nAvailable / nMeetings
+        if nMeetings != 0:
+            percentageAvailable = nAvailable / nMeetings
+        else :
+            percentageAvailable = 1
 
         matchedScore = 0
         if percentageAvailable >= 0.6:
@@ -101,7 +106,6 @@ def sortUserByAvailabilities(users, group):
         if percentageAvailable >= 0.9:
             matchedScore = 2
 
-        print(f"User {user['id']} is available for {percentageAvailable} of {group['name']}'s meetings")
         user['score'] = percentageAvailable
         user['match'] = matchedScore
         sortedUsers.append(user)
