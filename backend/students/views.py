@@ -11,7 +11,6 @@ from courses.serializers import CourseSerializer
 from sync_calendar import main
 
 import json
-# Create your views here.
 
 def index(request):
     students = []
@@ -63,8 +62,6 @@ def addCourse(request, id, cname):
             coursedata = CourseSerializer(course).data
             student.save()
             return JsonResponse(coursedata, safe=False)
-    ## ADD IN HERE FOR NEW COURSE CREATION ##
-    print(cname)
     return JsonResponse(coursedata, safe=False)
 
 def addLocation(request, id, loc):

@@ -55,8 +55,9 @@ def sortGroupBySkills(groups, user):
             synergyScore += count
 
         # User having skills that the group already has is worth 0.3
-        for skill, count in hasMatched.items():
-            synergyScore += count * 0.5
+        if group['weHave'] != []:
+            for skill, count in hasMatched.items():
+                synergyScore += count * 0.5
 
         # print("FINISHED")
         

@@ -112,4 +112,4 @@ groups = [
 ]
 
 
-print(sortGroupByDistance(groups, user))
+#print(sortGroupByDistance(groups, user))

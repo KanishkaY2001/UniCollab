@@ -4,7 +4,6 @@ from datetime import datetime
 import json
 
 from .models.groups import Group
-# from students.models import Student
 from groups.models.groupMembers import GroupMember
 from groups.models.groupCalendars import Calendar
 from rooms.models import Room
@@ -15,7 +14,6 @@ from students.serializers import StudentSerializer
 from groups.serializers import CalendarSerializer
 from matched_skills import lookingfor
 
-# Create your views here.
 def getGroupById(request, id=id):
   result = {}
   for group in Group.objects.all():
@@ -27,9 +25,6 @@ def getGroupById(request, id=id):
 def index(request, id=id):
   groups = []
   for group in Group.objects.all():
-      # 2019-01-07 10:00
-      # startTime = group.preferredmeetingStartTime.strftime("%Y-%m-%d %H:%M")
-      # endTime = group.preferredmeetingEndTime.strftime("%Y-%m-%d %H:%M")
       groups.append(getGroupJson(group))
   return JsonResponse(groups, safe=False)
 
@@ -75,9 +70,6 @@ def getGroupByRoom(request, rid):
 
 def getGroupJson(group):
     photo = json.dumps(str(group.photo))
-    # 2019-01-07 10:00
-    # startTime = group.preferredmeetingStartTime.strftime("%Y-%m-%d %H:%M")
-    # endTime = group.preferredmeetingEndTime.strftime("%Y-%m-%d %H:%M")
     id = group.id
     members = []
     members.append(StudentSerializer(group.owner).data)
@@ -105,10 +97,6 @@ def getGroupJson(group):
     return result
 
 def getMember(id, members):
-  #for group in Group.objects.all():
-  #  if group.id == id:
-  #    info = StudentSerializer(group.owner).data
-  #    members.append(info)
   for groupMem in GroupMember.objects.all():
     if (groupMem.group.id == id and groupMem.status):
       info = StudentSerializer(groupMem.member).data
@@ -199,10 +187,11 @@ def joinGroup(request, gid, id):
     grpMemb.skills=", ".join(matchedskills)
   grpMemb.save()
 
+  newSkills = []
   for skill in skills:
-    if skill in matchedskills:
-      skills.remove(skill)
-  group.skills = ", ".join(skills)
+    if skill not in matchedskills:
+      newSkills.append(skill)
+  group.skills = ", ".join(newSkills)
   group.save()
   return JsonResponse(result, safe=False)
 
@@ -221,9 +210,7 @@ def leaveGroup(request, gid, id):
     if grpMemb.member.id == id and grpMemb.group.id == gid:
       matchedSkills=grpMemb.skills.split(", ")
       grpMemb.delete()
-
   for skill in matchedSkills:
-      print(skill)
       skills.append(skill)
   group.skills = ", ".join(skills)
   group.save()

@@ -51,7 +51,7 @@ def sortGroupByAvailabilities(groups, user):
         if percentageAvailable >= 0.9:
             matchedScore = 2
 
-        print(f"You are available for {percentageAvailable} of {group['name']}'s meetings")
+        #print(f"You are available for {percentageAvailable} of {group['name']}'s meetings")
         group['score'] = percentageAvailable
         group['match'] = matchedScore
         sortedGroups.append(group)

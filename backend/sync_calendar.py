@@ -163,7 +163,6 @@ def main():
 
 
     # return event_array
-    print(event_array)
     return event_array
 
 if __name__ == "__main__":

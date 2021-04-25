@@ -20,5 +20,3 @@ def lookingfor(words, courses):
     return skills
 
 usersSkills = lookingfor(groupSkills, courses)
-print("users skills are")
-print(usersSkills)
