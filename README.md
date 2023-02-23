@@ -11,12 +11,8 @@
 - **Tiana Douroudis** - *Backend Developer*  
 
 
-## deliverable1
+## Prototype
 ### high fidelity link: https://www.figma.com/file/k896mzR2rCloZmdkdZPcQK/UniCollab-High-Fi-Prototyping?node-id=98%3A0
-
-## Build Setup
-=======
-# Unicollab
 
 ## Build Setup
 
